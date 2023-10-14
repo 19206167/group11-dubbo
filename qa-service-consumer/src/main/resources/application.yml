@@ -1,0 +1,31 @@
+spring:
+  application:
+    #    服务名称
+    name:
+      qa-service-consumer
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 0
+      max-file-size: 2048MB
+      max-request-size: 2048MB
+
+# 服务运行端口
+server:
+  port: 8603
+
+#dubbo config properties
+dubbo:
+  scan:
+    base-packages: com.example.group11.controller.qa
+  application:
+    id: com.example.group11.controller.qa
+    name: com.example.group11.controller.qa
+  protocol:
+    id: dubbo
+    name: dubbo
+  registry:
+    id: zookeeper
+    #    zookeeper运行端口
+    address: zookeeper://127.0.0.1:2181
+

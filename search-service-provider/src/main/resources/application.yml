@@ -1,0 +1,38 @@
+spring:
+  application:
+    #    服务名称
+    name:
+      search-service-provider
+  #    数据库连接信息
+  datasource:
+    url: jdbc:mysql://group11-database-do-user-14640959-0.b.db.ondigitalocean.com:25060/defaultdb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=true
+    data-username: doadmin
+    data-password: AVNS_UeUmefIueMk-xarcAHd
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 0
+      max-file-size: 2048MB
+      max-request-size: 2048MB
+
+# 服务运行端口
+server:
+  port: 8505
+
+#dubbo config properties
+dubbo:
+  scan:
+    base-packages: com.example.group11.service.search.impl
+  application:
+    id: com.example.group11.service.search
+    name: com.example.group11.service.search
+  protocol:
+    id: dubbo
+    name: dubbo
+    #    dubbo端口
+    port: 20885
+  registry:
+    id: zookeeper
+    #    zookeeper运行端口
+    address: zookeeper://127.0.0.1:2181
+
