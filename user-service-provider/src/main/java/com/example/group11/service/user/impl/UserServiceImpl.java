@@ -4,6 +4,7 @@ import com.example.group11.commons.utils.Group11Exception;
 import com.example.group11.model.UserModel;
 import com.example.group11.service.user.UserService;
 import com.example.group11.vo.query.UserQueryVO;
+import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -19,7 +20,14 @@ import java.util.List;
  * @Description ToDo
  * @Date 2023/10/14 19:20
  */
+@DubboService(version="1.0.0", interfaceClass = com.example.group11.service.user.UserService.class)
 public class UserServiceImpl implements UserService {
+
+    @Override
+    public int getOne() {
+        return 0;
+    }
+
     @Override
     public UserModel queryUserByLoginName(String loginName) {
         return null;

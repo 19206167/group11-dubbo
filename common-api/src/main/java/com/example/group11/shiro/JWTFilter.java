@@ -1,9 +1,10 @@
 package com.example.group11.shiro;
 
 import com.alibaba.fastjson.JSON;
-import com.example.group11practice.utils.ErrorCode;
-import com.example.group11practice.utils.JWTUtil;
-import com.example.group11practice.utils.RestResult;
+
+import com.example.group11.commons.utils.ErrorCode;
+import com.example.group11.commons.utils.JWTUtil;
+import com.example.group11.commons.utils.RestResult;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authz.UnauthorizedException;

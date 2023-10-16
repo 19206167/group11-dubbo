@@ -10,6 +10,8 @@ import java.util.List;
 
 public interface UserService extends BaseService<UserModel, Long> {
 
+    int getOne();
+
     UserModel queryUserByLoginName(String loginName);
 
     Long queryUserIdByLoginName(String loginName);

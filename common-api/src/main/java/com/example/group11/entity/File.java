@@ -1,10 +1,11 @@
 package com.example.group11.entity;
 
-import com.example.group11practice.utils.BaseEntity;
+import com.example.group11.commons.utils.BaseEntity;
 import lombok.Data;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 

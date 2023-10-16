@@ -1,10 +1,11 @@
 package com.example.group11.shiro;
 
 
-import com.example.group11practice.model.UserModel;
-import com.example.group11practice.service.UserService;
-import com.example.group11practice.utils.CheckUtil;
-import com.example.group11practice.utils.JWTUtil;
+import com.example.group11.commons.utils.CheckUtil;
+import com.example.group11.commons.utils.JWTUtil;
+import com.example.group11.model.UserModel;
+import com.example.group11.service.user.UserService;
+import jdk.nashorn.internal.ir.annotations.Reference;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -21,10 +22,9 @@ import java.util.List;
 
 @Service
 public class MyRealm extends AuthorizingRealm {
-
-    @Autowired
+    
+    @Reference
     private UserService userService;
-
 
     /**
      * 大坑！，必须重写此方法，不然Shiro会报错
