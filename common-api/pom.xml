@@ -22,10 +22,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.example.group11</groupId>
             <artifactId>common-utils</artifactId>
             <version>1.0-SNAPSHOT</version>
@@ -45,6 +41,22 @@
         <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-annotations</artifactId>
+        </dependency>
+
+        <!--            shiro框架，安全，生成JWT-->
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-core</artifactId>
+        </dependency>
+        <!--            shiro框架，安全，生成JWT-->
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-spring</artifactId>
+        </dependency>
+        <!--            shiro框架，安全，生成JWT-->
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-ehcache</artifactId>
         </dependency>
     </dependencies>
 

@@ -13,7 +13,7 @@ import com.example.group11.vo.query.UserQueryVO;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.web.bind.annotation.*;
@@ -28,8 +28,13 @@ import java.util.List;
 @Slf4j
 public class UserController {
 
-    @Autowired
+    @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.user.UserService.class)
     private UserService userService;
+
+    @GetMapping("/exapi/sys/user/1")
+    public int getOne(){
+        return userService.getOne();
+    }
 
     @PostMapping("/sys/user/login")
     @ApiOperation(notes = "用户登录获取token", value = "用户登录获取token", tags = "用户管理")

@@ -13,7 +13,7 @@ import com.example.group11.vo.UserVO;
 import com.example.group11.vo.query.UserQueryVO;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,10 +24,10 @@ import java.util.List;
 @RequestMapping("/follow/")
 public class FollowController {
 
-    @Autowired
+    @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.user.UserService.class)
     private UserService userService;
 
-    @Autowired
+    @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.user.FollowService.class)
     private FollowService followService;
 
     @GetMapping("me/fan-list")

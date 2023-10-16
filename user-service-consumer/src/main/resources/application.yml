@@ -3,6 +3,12 @@ spring:
     #    服务名称
     name:
       user-service-consumer
+  #    数据库连接信息
+  datasource:
+    url: jdbc:mysql://group11-database-do-user-14640959-0.b.db.ondigitalocean.com:25060/defaultdb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=true
+    username: doadmin
+    password: AVNS_UeUmefIueMk-xarcAHd
+    driver-class-name: com.mysql.cj.jdbc.Driver
   servlet:
     multipart:
       enabled: true
@@ -28,4 +34,5 @@ dubbo:
     id: zookeeper
     #    zookeeper运行端口
     address: zookeeper://127.0.0.1:2181
+#    group: group11
 

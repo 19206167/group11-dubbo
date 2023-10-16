@@ -3,6 +3,7 @@ package com.example.group11.service.user.impl;
 import com.example.group11.commons.utils.Group11Exception;
 import com.example.group11.model.FollowModel;
 import com.example.group11.service.user.FollowService;
+import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -18,7 +19,9 @@ import java.util.List;
  * @Description ToDo
  * @Date 2023/10/14 19:20
  */
-public class FollowServiceImpl implements FollowService {
+
+@DubboService(version="1.0.0", interfaceClass = com.example.group11.service.user.FollowService.class)
+public class FollowServiceImpl implements FollowService{
     @Override
     public FollowModel findById(Long id) {
         return null;

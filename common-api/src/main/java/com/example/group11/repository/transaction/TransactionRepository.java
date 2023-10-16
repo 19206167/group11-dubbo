@@ -11,5 +11,6 @@ import com.example.group11.entity.Transaction;
  * @Description ToDo
  * @Date 2023/10/14 21:27
  */
-public interface TransactionRepository extends BaseRepository<Transaction, Long> {
+// extends BaseRepository<Transaction, Long>
+public interface TransactionRepository  {
 }

@@ -1,6 +1,7 @@
 package com.example.group11.entity;
 
 import com.example.group11.commons.utils.BaseEntity;
+import lombok.Data;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,7 +18,9 @@ import java.util.Date;
  * @Description ToDo
  * @Date 2023/10/11 21:18
  */
-public class Transaction implements Serializable, BaseEntity<Long> {
+
+@Data
+public class Transaction implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
