@@ -22,12 +22,6 @@ public class FileModel implements Serializable {
 
     private Date createTime;
 
-    private String createBy;
-
-    private Date updateTime;
-
-    private String updateBy;
-
     private String remark;
 
 }
