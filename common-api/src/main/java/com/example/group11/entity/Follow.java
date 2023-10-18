@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @DynamicUpdate
 @DynamicInsert
 @Data
-@Table(name = "FOLLOW")
+@Table(name = "follow")
 public class Follow implements BaseEntity<Long>, Serializable {
 
     private static final long serialVersionUID = 1L;

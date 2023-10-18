@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
  *
  * @author 刘梓健
  * @version 1.0
- * @Description ToDo
+ * @Description New question bean
  * @Date 2023/10/18 21:15
  */
 @Entity

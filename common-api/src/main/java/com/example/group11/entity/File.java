@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @DynamicUpdate
 @DynamicInsert
 @Data
-@Table(name = "FILE")
+@Table(name = "file")
 public class File implements BaseEntity<Integer>, Serializable {
 
     private static final long serialVersionUID = 1L;

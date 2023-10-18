@@ -2,10 +2,10 @@ package com.example.group11.entity;
 
 import com.example.group11.commons.utils.BaseEntity;
 import lombok.Data;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -15,12 +15,16 @@ import java.time.LocalDateTime;
  *
  * @author 刘梓健
  * @version 1.0
- * @Description Transaction
+ * @Description Transaction Bean
  * @Date 2023/10/11 21:18
  */
 
+@Entity
+@DynamicUpdate
+@DynamicInsert
 @Data
-public class Transaction implements Serializable {
+@Table(name = "transaction")
+public class Transaction implements BaseEntity<Long>, Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id

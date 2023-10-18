@@ -1,5 +1,8 @@
 package com.example.group11.repository.qa;
 
+import com.example.group11.commons.utils.BaseRepository;
+import com.example.group11.entity.Answer;
+
 /**
  * FileName: AnswerRepository.java
  *
@@ -8,5 +11,5 @@ package com.example.group11.repository.qa;
  * @Description ToDo
  * @Date 2023/10/14 21:27
  */
-public interface AnswerRepository {
+public interface AnswerRepository extends BaseRepository<Answer, Integer> {
 }

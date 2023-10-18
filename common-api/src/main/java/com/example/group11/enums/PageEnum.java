@@ -19,5 +19,4 @@ public enum PageEnum {
     public String getValue() {
         return name;
     }
-
-    }
+}
