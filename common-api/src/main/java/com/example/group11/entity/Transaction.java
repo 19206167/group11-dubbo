@@ -8,7 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * FileName: TransactionHistory.java
@@ -29,15 +29,16 @@ public class Transaction implements Serializable {
 
     private Long userId;
 
+    private Long receiverId;
+
     private BigDecimal amount;
 
     private Integer operation;
 
-    private Long receiverId;
-
     private Boolean deleted;
 
-    private Date createTime;
+    private LocalDateTime createTime;
 
     private String remark;
 }
+

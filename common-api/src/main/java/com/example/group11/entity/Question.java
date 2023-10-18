@@ -1,6 +1,5 @@
 package com.example.group11.entity;
 
-
 import com.example.group11.commons.utils.BaseEntity;
 import lombok.Data;
 import org.hibernate.annotations.DynamicInsert;
@@ -10,41 +9,49 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Date;
+
+/**
+ * FileName: Question.java
+ *
+ * @author 刘梓健
+ * @version 1.0
+ * @Description Question Bean
+ * @Date 2023/10/18 20:52
+ */
 
 @Entity
 @DynamicUpdate
 @DynamicInsert
 @Data
-@Table(name = "USER")
-public class User implements BaseEntity<Long>, Serializable {
+@Table(name = "question")
+public class Question implements BaseEntity<Integer>, Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
-    private String loginName;
+    private Long askerId;
 
-    private String userName;
+    private Long responderId;
 
-    private String password;
+    private String content;
 
-    private String salt;
+    private BigDecimal reward;
 
-    private String email;
+    private Boolean paid;
 
-    private String phone;
+    private Integer answerId;
 
-    private String role;
+    private Integer commentNum;
 
-    private BigDecimal balance;
+    private Integer likeNum;
 
     private Boolean deleted;
 
     private LocalDateTime createTime;
-
-    private LocalDateTime updateTime;
 
     private String remark;
 }

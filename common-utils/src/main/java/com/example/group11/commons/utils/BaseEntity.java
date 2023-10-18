@@ -7,7 +7,7 @@ public interface BaseEntity<IdType> {
 
     void setId(IdType id);
 
-    Boolean getDeleted();
-
-    void setDeleted(Boolean deleted);
+//    Boolean getDeleted();
+//
+//    void setDeleted(Boolean deleted);
 }

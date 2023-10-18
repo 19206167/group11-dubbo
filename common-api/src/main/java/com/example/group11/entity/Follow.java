@@ -8,7 +8,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @DynamicUpdate
@@ -29,13 +29,7 @@ public class Follow implements BaseEntity<Long>, Serializable {
 
     private Boolean deleted;
 
-    private Date createTime;
-
-    private String createBy;
-
-    private Date updateTime;
-
-    private String updateBy;
+    private LocalDateTime createTime;
 
     private String remark;
 
