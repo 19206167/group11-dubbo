@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
-@RestController
+@RestController("/sys/user")
 @Slf4j
 public class UserController {
 

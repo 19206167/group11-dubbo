@@ -51,5 +51,4 @@ public class User implements BaseEntity<Long>, Serializable {
     private String updateBy;
 
     private String remark;
-
 }

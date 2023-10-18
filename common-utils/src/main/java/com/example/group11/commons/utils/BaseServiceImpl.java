@@ -1,6 +1,7 @@
 package com.example.group11.commons.utils;
 
 import com.alibaba.fastjson.JSON;
+import org.checkerframework.checker.units.qual.A;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -177,8 +178,8 @@ public abstract class BaseServiceImpl<MType, EntityType extends BaseEntity<IdTyp
         List<EntityType> entityList = new ArrayList<>();
         for (MType model : models) {
             EntityType entity = generateId(mapBean(model, getEntityType()));
-            entity.setCreateTime(new Date());
-            entity.setUpdateTime(new Date());
+//            entity.setCreateTime(new Date());
+//            entity.setUpdateTime(new Date());
             entity.setDeleted(false);
             entityList.add(entity);
         }
@@ -252,13 +253,13 @@ public abstract class BaseServiceImpl<MType, EntityType extends BaseEntity<IdTyp
         entityList = entityList.stream().filter(e -> !isLogicDeleted(e)).collect(Collectors.toList());
         entityList.forEach(e -> {
             e.setDeleted(true);
-            e.setUpdateTime(new Date());
+//            e.setUpdateTime(new Date());
             EntityType inputEnt = inputEntityList.get(e.getId());
-            if (inputEnt != null) {
-                if (CheckUtil.isNotEmpty(inputEnt.getUpdateBy())) {
-                    e.setUpdateBy(inputEnt.getUpdateBy());
-                }
-            }
+//            if (inputEnt != null) {
+//                if (CheckUtil.isNotEmpty(inputEnt.getUpdateBy())) {
+//                    e.setUpdateBy(inputEnt.getUpdateBy());
+//                }
+//            }
         });
 
         // do save
@@ -425,7 +426,7 @@ public abstract class BaseServiceImpl<MType, EntityType extends BaseEntity<IdTyp
             } catch (Exception e1) {
                 throw Group11Exception.illegalState("model的非空属性合并到db的entity时发生错误。" + e1.getMessage(), e1);
             }
-            entity.setUpdateTime(new Date());
+//            entity.setUpdateTime(new Date());
 
         }
         // do save

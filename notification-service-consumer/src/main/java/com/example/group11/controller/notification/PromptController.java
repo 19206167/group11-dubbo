@@ -1,12 +1,14 @@
 package com.example.group11.controller.notification;
 
+import com.example.group11.service.notification.NotificationService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Slf4j
-@RequestMapping("/prompt/")
+@RequestMapping("/prompt")
 public class PromptController {
 
     /**
@@ -16,6 +18,8 @@ public class PromptController {
      *  由该消息推送服务器通过webSocket向browser统一推送全系统的消息
      */
 
+    @DubboReference(version="1.0.0", interfaceClass = com.example.group11.service.notification.NotificationService.class)
+    NotificationService notificationService;
 
 //    @GetMapping("")
 //    @ApiOperation(notes = "专门", value = "根据多条件查询全部回答的分页列表", tags = "问题管理")

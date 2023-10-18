@@ -1,8 +1,10 @@
 package com.example.group11.controller.transaction;
 
 import com.example.group11.commons.utils.RestResult;
+import com.example.group11.service.transaction.TransactionService;
 import com.example.group11.vo.TransactionVO;
 import io.swagger.annotations.ApiOperation;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,6 +21,8 @@ import java.util.List;
  */
 @RestController
 public class TransactionController {
+    @DubboReference(version="1.0.0", interfaceClass = com.example.group11.service.transaction.TransactionService.class)
+    TransactionService transactionService;
 
     @GetMapping("transaction/payForQuestion/{userId}/{questionId}")
     @ApiOperation(notes = "问题可以未，已支付和未支付状态", value = "用户为提问某问题付款", tags = "交易")

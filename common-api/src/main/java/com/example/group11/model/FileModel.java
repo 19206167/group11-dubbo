@@ -2,10 +2,11 @@ package com.example.group11.model;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @Data
-public class FileModel {
+public class FileModel implements Serializable {
 
     private Long id;
 

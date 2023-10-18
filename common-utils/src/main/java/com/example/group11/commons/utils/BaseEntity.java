@@ -10,21 +10,4 @@ public interface BaseEntity<IdType> {
     Boolean getDeleted();
 
     void setDeleted(Boolean deleted);
-
-    Date getCreateTime();
-
-    void setCreateTime(Date createTime);
-
-    String getCreateBy();
-
-    void setCreateBy(String createBy);
-
-    Date getUpdateTime();
-
-    void setUpdateTime(Date updateTime);
-
-    String getUpdateBy();
-
-    void setUpdateBy(String updateBy);
-
 }

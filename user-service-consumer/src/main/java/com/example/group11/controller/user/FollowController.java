@@ -21,7 +21,7 @@ import java.util.List;
 
 @RestController
 @Slf4j
-@RequestMapping("/follow/")
+@RequestMapping("/sys/follow")
 public class FollowController {
 
     @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.user.UserService.class)
@@ -30,7 +30,7 @@ public class FollowController {
     @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.user.FollowService.class)
     private FollowService followService;
 
-    @GetMapping("me/fan-list")
+    @GetMapping("/me/fan-list")
     @ApiOperation(notes = "根据多条件查询当前登录用户的粉丝分页列表", value = "根据多条件查询当前登录用户的粉丝分页列表", tags = "关注管理")
     public RestResult<List<UserVO>> queryMyFanList(UserQueryVO params, HttpServletRequest httpServletRequest) {
         String token = JWTUtil.getToken(httpServletRequest);
@@ -41,25 +41,25 @@ public class FollowController {
         return RestResult.ok(OrikaUtil.mapAsList(userModelList, UserVO.class));
     }
 
-    @GetMapping("me/following-list")
+    @GetMapping("/me/following-list")
     @ApiOperation(notes = "根据多条件查询当前登录用户的关注分页列表", value = "根据多条件查询当前登录用户的关注分页列表", tags = "关注管理")
     public RestResult<List<UserVO>> queryMyFollowingList(UserQueryVO params, HttpServletRequest httpServletRequest) {
         return RestResult.ok();
     }
 
-    @GetMapping("{id}/fan-list")
+    @GetMapping("/{id}/fan-list")
     @ApiOperation(notes = "根据多条件查询目标用户的粉丝分页列表", value = "根据多条件查询目标用户的粉丝分页列表", tags = "关注管理")
     public RestResult<List<UserVO>> queryUserFanList(@PathVariable Long id, UserQueryVO params, HttpServletRequest httpServletRequest) {
         return RestResult.ok();
     }
 
-    @GetMapping("{id}/following-list")
+    @GetMapping("/{id}/following-list")
     @ApiOperation(notes = "根据多条件查询目标用户的关注分页列表", value = "根据多条件查询目标用户的关注分页列表", tags = "关注管理")
     public RestResult<List<UserVO>> queryUserFollowingList(@PathVariable Long id, UserQueryVO params, HttpServletRequest httpServletRequest) {
         return RestResult.ok();
     }
 
-    @PostMapping("add/{followedUserId}")
+    @PostMapping("/add/{followedUserId}")
     @ApiOperation(notes = "关注目标用户", value = "关注目标用户", tags = "关注管理")
     public RestResult<UserVO> addFollowingUser(@PathVariable Long followedUserId, HttpServletRequest httpServletRequest) {
         String token = JWTUtil.getToken(httpServletRequest);
@@ -78,7 +78,7 @@ public class FollowController {
         return RestResult.ok(OrikaUtil.map(userModel, UserVO.class));
     }
 
-    @PostMapping("cancel/{followedUserId}")
+    @PostMapping("/cancel/{followedUserId}")
     @ApiOperation(notes = "取消关注目标用户", value = "取消关注目标用户", tags = "关注管理")
     public RestResult<UserVO> cancelFollowingUser(@PathVariable Long followedUserId, HttpServletRequest httpServletRequest) {
         return RestResult.ok();

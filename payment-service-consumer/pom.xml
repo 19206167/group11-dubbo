@@ -27,11 +27,11 @@
             <artifactId>common-utils</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>org.example.group11</groupId>
-            <artifactId>dubbo-commons</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.example.group11</groupId>-->
+<!--            <artifactId>dubbo-commons</artifactId>-->
+<!--            <version>1.0-SNAPSHOT</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.example.group11</groupId>
             <artifactId>common-api</artifactId>
