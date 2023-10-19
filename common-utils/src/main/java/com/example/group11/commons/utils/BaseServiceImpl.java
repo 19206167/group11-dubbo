@@ -12,6 +12,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 import javax.persistence.EntityManager;
 import javax.persistence.GeneratedValue;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -49,8 +50,7 @@ public abstract class BaseServiceImpl<MType, EntityType extends BaseEntity<IdTyp
     }
 
     private boolean isLogicDeleted(EntityType entityType) {
-//        return Boolean.TRUE.equals(entityType.getDeleted());
-        return true;
+        return Boolean.TRUE.equals(entityType.getDeleted());
     }
 
     protected <S, T> T mapBean(S source, Class<T> toType) {
@@ -180,7 +180,7 @@ public abstract class BaseServiceImpl<MType, EntityType extends BaseEntity<IdTyp
             EntityType entity = generateId(mapBean(model, getEntityType()));
 //            entity.setCreateTime(new Date());
 //            entity.setUpdateTime(new Date());
-//            entity.setDeleted(false);
+            entity.setDeleted(false);
             entityList.add(entity);
         }
 
@@ -252,7 +252,7 @@ public abstract class BaseServiceImpl<MType, EntityType extends BaseEntity<IdTyp
         List<EntityType> entityList = repo.findAllById(ids);
         entityList = entityList.stream().filter(e -> !isLogicDeleted(e)).collect(Collectors.toList());
         entityList.forEach(e -> {
-//            e.setDeleted(true);
+            e.setDeleted(true);
 //            e.setUpdateTime(new Date());
             EntityType inputEnt = inputEntityList.get(e.getId());
 //            if (inputEnt != null) {
@@ -358,7 +358,7 @@ public abstract class BaseServiceImpl<MType, EntityType extends BaseEntity<IdTyp
         }
 
         EntityType entityExample = mapBean(example, getEntityType());
-//        entityExample.setDeleted(false); // 未删除的
+        entityExample.setDeleted(false); // 未删除的
 
         Example<EntityType> example2 = Example.of(entityExample);
         List<EntityType> rawList;
@@ -382,7 +382,7 @@ public abstract class BaseServiceImpl<MType, EntityType extends BaseEntity<IdTyp
         }
 
         EntityType entityExample = mapBean(example, getEntityType());
-//        entityExample.setDeleted(false); // 未删除的
+        entityExample.setDeleted(false); // 未删除的
 
         Example<EntityType> example2 = Example.of(entityExample);
         return repo.count(example2);

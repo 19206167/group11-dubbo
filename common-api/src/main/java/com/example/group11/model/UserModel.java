@@ -4,7 +4,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 public class UserModel implements Serializable {
@@ -31,11 +31,12 @@ public class UserModel implements Serializable {
 
     private Boolean deleted;
 
-    private Date createTime;
+    private LocalDateTime createTime;
 
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
     private String remark;
+
 
 }
 

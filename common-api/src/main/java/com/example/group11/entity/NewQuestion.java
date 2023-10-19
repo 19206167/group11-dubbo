@@ -37,4 +37,6 @@ public class NewQuestion implements BaseEntity<Integer>, Serializable {
     private LocalDateTime createTime;
 
     private String remark;
+
+    private Boolean deleted;
 }
