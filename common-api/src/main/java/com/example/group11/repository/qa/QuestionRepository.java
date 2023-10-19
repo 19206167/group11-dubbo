@@ -12,4 +12,5 @@ import com.example.group11.entity.Question;
  * @Date 2023/10/14 21:27
  */
 public interface QuestionRepository extends BaseRepository<Question, Integer> {
+
 }
