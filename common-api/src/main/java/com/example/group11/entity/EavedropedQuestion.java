@@ -41,5 +41,7 @@ public class EavedropedQuestion implements BaseEntity<Integer>, Serializable {
     private LocalDateTime createTime;
 
     private String remark;
+
+    private Boolean deleted;
 }
 

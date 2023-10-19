@@ -1,7 +1,7 @@
 package com.example.group11.repository.user;
 
 import com.example.group11.commons.utils.BaseRepository;
-import com.example.group11.entity.User;
+import com.example.group11.entity.Follow;
 
 /**
  * FileName: FollowRepository.java
@@ -11,5 +11,5 @@ import com.example.group11.entity.User;
  * @Description ToDo
  * @Date 2023/10/14 21:26
  */
-public interface FollowRepository extends BaseRepository<User, Long> {
+public interface FollowRepository extends BaseRepository<Follow, Long> {
 }

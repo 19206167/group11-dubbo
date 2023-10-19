@@ -3,6 +3,11 @@ spring:
     #    服务名称
     name:
       qa-service-consumer
+  datasource:
+    url: jdbc:mysql://group11-database-do-user-14640959-0.b.db.ondigitalocean.com:25060/defaultdb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=true
+    username: doadmin
+    password: AVNS_UeUmefIueMk-xarcAHd
+    driver-class-name: com.mysql.cj.jdbc.Driver
   servlet:
     multipart:
       enabled: true
