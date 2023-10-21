@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.example</groupId>
-    <artifactId>payment-service-consumer</artifactId>
+    <artifactId>notification-service-consumer</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
@@ -13,12 +13,11 @@
         <maven.compiler.target>8</maven.compiler.target>
     </properties>
 
-
     <parent>
         <groupId>com.example.group11</groupId>
         <artifactId>commons</artifactId>
         <version>1.0-SNAPSHOT</version>
-        <relativePath>../commons/pom.xml</relativePath>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <dependencies>
@@ -39,4 +38,23 @@
             <scope>compile</scope>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <!--                打包不包括lombok-->
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>

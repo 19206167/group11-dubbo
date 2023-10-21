@@ -19,6 +19,23 @@
     <version>1.0-SNAPSHOT</version>
 <!--    打包方式为pom打包-->
     <packaging>pom</packaging>
+    <modules>
+        <module>dubbo-commons</module>
+        <module>common-api</module>
+        <module>common-utils</module>
+        <module>user-service-provider</module>
+        <module>user-service-consumer</module>
+        <module>search-service-provider</module>
+        <module>search-service-consumer</module>
+        <module>qa-service-provider</module>
+        <module>qa-service-consumer</module>
+        <module>payment-service-provider</module>
+        <module>payment-service-consumer</module>
+        <module>notification-service-provider</module>
+        <module>notification-service-consumer</module>
+        <module>file-service-provider</module>
+        <module>file-service-consumer</module>
+    </modules>
 
     <name>Dubbo Spring Boot Commons</name>
     <description>common modules</description>
@@ -293,23 +310,23 @@
     </dependencies>
 
 
-    <build>
-        <plugins>
-            <plugin>
-<!--                打包不包括lombok-->
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+<!--    <build>-->
+<!--        <plugins>-->
+<!--            <plugin>-->
+<!--&lt;!&ndash;                打包不包括lombok&ndash;&gt;-->
+<!--                <groupId>org.springframework.boot</groupId>-->
+<!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
+<!--                <configuration>-->
+<!--                    <excludes>-->
+<!--                        <exclude>-->
+<!--                            <groupId>org.projectlombok</groupId>-->
+<!--                            <artifactId>lombok</artifactId>-->
+<!--                        </exclude>-->
+<!--                    </excludes>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
+<!--        </plugins>-->
+<!--    </build>-->
 
 
 </project>

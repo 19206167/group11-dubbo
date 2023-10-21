@@ -8,17 +8,12 @@
         <groupId>com.example.group11</groupId>
         <artifactId>commons</artifactId>
         <version>1.0-SNAPSHOT</version>
-        <relativePath>../commons/pom.xml</relativePath>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <!--项目标识符，对应在java文件夹下的结构-->
-    <groupId>com.example.group11</groupId>
-    <!--    项目名-->
-    <artifactId>common-utils</artifactId>
-    <!--    项目版本号-->
+    <groupId>org.example.group11</groupId>
+    <artifactId>common-api</artifactId>
     <version>1.0-SNAPSHOT</version>
-<!--    &lt;!&ndash;    打包方式为pom打包&ndash;&gt;-->
-<!--    <packaging>pom</packaging>-->
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -26,27 +21,25 @@
     </properties>
 
     <dependencies>
-        <!--            lombok 方便操作数据-->
-<!--        <dependency>-->
-<!--            <groupId>org.projectlombok</groupId>-->
-<!--            <artifactId>lombok</artifactId>-->
-<!--        </dependency>-->
-
-<!--                    java Bean映射框架-->
         <dependency>
-            <groupId>ma.glasnost.orika</groupId>
-            <artifactId>orika-core</artifactId>
+            <groupId>com.example.group11</groupId>
+            <artifactId>common-utils</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
-
-        <!-- jwt-->
+        <!--            swagger接口文档-->
         <dependency>
-            <groupId>com.auth0</groupId>
-            <artifactId>java-jwt</artifactId>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
         </dependency>
-
+        <!--            swagger接口文档ui-->
         <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+        </dependency>
+        <!--            swagger接口文档注释-->
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-annotations</artifactId>
         </dependency>
 
         <!--            shiro框架，安全，生成JWT-->
@@ -54,19 +47,31 @@
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-core</artifactId>
         </dependency>
-
         <!--            shiro框架，安全，生成JWT-->
         <dependency>
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-spring</artifactId>
         </dependency>
-
         <!--            shiro框架，安全，生成JWT-->
         <dependency>
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-ehcache</artifactId>
         </dependency>
-
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <!--                打包不包括lombok-->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
 
 </project>
