@@ -2,6 +2,7 @@ package com.example.group11.controller.qa;
 
 
 import com.example.group11.commons.utils.RestResult;
+import com.example.group11.entity.Question;
 import com.example.group11.service.qa.QAService;
 import com.example.group11.vo.QuestionDetailVO;
 import com.example.group11.vo.QuestionVO;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Page;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -89,10 +91,12 @@ public class QAController {
         return RestResult.ok();
     }
 
-    @PostMapping("ask")
+    @PostMapping("ask/{}")
     @ApiOperation(notes = "提问问题", value = "提问问题", tags = "问题管理")
-    public RestResult<QuestionVO> askQuestion(@RequestBody QuestionVO questionVO, HttpServletRequest httpServletRequest) {
-        //向kafka发送
+    public RestResult<QuestionVO> askQuestion(@PathVariable Long askUserId, @PathVariable Long responderId,
+                                              @PathVariable String content, @PathVariable BigDecimal reward, HttpServletRequest httpServletRequest) {
+
+        Question question = new Question(askUserId, responderId, content, reward, false, -1, 0, 0);
         return RestResult.ok();
     }
 

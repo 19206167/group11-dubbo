@@ -54,4 +54,15 @@ public class Question implements BaseEntity<Integer>, Serializable {
     private LocalDateTime createTime;
 
     private String remark;
+
+    public Question(Long askerId, Long responderId, String content, BigDecimal reward, Boolean paid, Integer answerId, Integer commentNum, Integer likeNum) {
+        this.askerId = askerId;
+        this.responderId = responderId;
+        this.content = content;
+        this.reward = reward;
+        this.paid = paid;
+        this.answerId = answerId;
+        this.commentNum = commentNum;
+        this.likeNum = likeNum;
+    }
 }
