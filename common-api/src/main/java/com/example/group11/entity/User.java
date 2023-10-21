@@ -36,9 +36,15 @@ public class User implements BaseEntity<Long>, Serializable {
 
     private String phone;
 
-    private String role;
+    private String portrait;
+
+    private Integer role;
+
+    private BigDecimal earnings;
 
     private BigDecimal balance;
+
+    private String description;
 
     private Boolean deleted;
 

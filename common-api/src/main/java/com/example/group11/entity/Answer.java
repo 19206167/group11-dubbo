@@ -4,6 +4,7 @@ import com.example.group11.commons.utils.BaseEntity;
 import lombok.Data;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.mapping.List;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -35,13 +36,30 @@ public class Answer implements BaseEntity<Integer>, Serializable {
 
     private String content;
 
+//    0表示文字回答，1表示语音回答
     private Integer type;
 
-    private String url;
+    private List url;
 
     private Boolean deleted;
 
     private LocalDateTime createTime;
 
     private String remark;
+
+    public Answer() {
+    }
+
+    public Answer(Integer questionId, String content, Integer type, List url) {
+        this.questionId = questionId;
+        this.content = content;
+        this.type = type;
+        this.url = url;
+    }
+
+    public Answer(Integer questionId, String content, Integer type) {
+        this.questionId = questionId;
+        this.content = content;
+        this.type = type;
+    }
 }

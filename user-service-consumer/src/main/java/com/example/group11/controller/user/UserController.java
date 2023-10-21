@@ -33,7 +33,7 @@ public class UserController {
                             @RequestParam("password") String password) {
         UserModel userModel = userService.queryUserByLoginName(loginName);
         if (userModel.getPassword().equals(ShiroUtil.sha256(password, userModel.getSalt()))) {
-            return RestResult.ok(JWTUtil.sign(userModel.getLoginName(), userModel.getId()));
+            return RestResult.ok(JWTUtil.sign(userModel.getLoginName(), userModel.getId(), userModel.getRole()));
         } else {
             throw Group11Exception.unauthorized("未认证");
         }

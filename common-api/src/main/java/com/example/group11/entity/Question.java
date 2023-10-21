@@ -65,4 +65,6 @@ public class Question implements BaseEntity<Integer>, Serializable {
         this.commentNum = commentNum;
         this.likeNum = likeNum;
     }
+
+    public Question() {}
 }

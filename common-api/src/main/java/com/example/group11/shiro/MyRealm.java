@@ -14,6 +14,7 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -41,7 +42,7 @@ public class MyRealm extends AuthorizingRealm {
         String loginName = JWTUtil.getLoginName(principals.toString());
         UserModel userModel = userService.queryUserByLoginName(loginName);
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
-        List<String> roleNameList = Arrays.asList(userModel.getRole());
+        List<String> roleNameList = Arrays.asList(String.valueOf(userModel.getRole()));
 //        List<String> permissionNameList = userService.queryPermissionByUserId(userModel.getId()).stream().map(
 //                PermissionModel::getPerName).collect(Collectors.toList());
         simpleAuthorizationInfo.addRoles(roleNameList);

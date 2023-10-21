@@ -1,4 +1,4 @@
-package com.example.group11.repository.impl;
+package com.example.group11.repository.impl.user;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

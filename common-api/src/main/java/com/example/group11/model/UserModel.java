@@ -25,9 +25,16 @@ public class UserModel implements Serializable {
 
     private String phone;
 
-    private String role;
+    private String portrait;
+
+    //    0是读者，1是作者
+    private Integer role;
+
+    private BigDecimal earnings;
 
     private BigDecimal balance;
+
+    private String description;
 
     private Boolean deleted;
 

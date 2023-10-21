@@ -129,7 +129,6 @@ public abstract class BaseServiceImpl<MType, EntityType extends BaseEntity<IdTyp
                 .collect(Collectors.toList());
     }
 
-
     @Override
     public IdType insertOne(MType model) throws Group11Exception {
         if (model == null) {

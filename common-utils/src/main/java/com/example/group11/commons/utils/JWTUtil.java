@@ -74,8 +74,18 @@ public class JWTUtil {
         }
     }
 
+    public static Integer getUserRole(String token) {
+        try {
+            DecodedJWT jwt = JWT.decode(token);
+            return jwt.getClaim("userRole").asInt();
+        } catch (JWTDecodeException e) {
+            log.error("error：{}", e.getMessage());
+            return null;
+        }
+    }
 
-    public static String sign(String loginName, Long userId) {
+
+    public static String sign(String loginName, Long userId, Integer userRole) {
         try {
             Map<String, Object> map = new HashMap<>();
             map.put("alg", "HS256");
@@ -84,6 +94,7 @@ public class JWTUtil {
             return JWT.create()
                     .withHeader(map)
                     .withClaim("loginName", loginName)
+                    .withClaim("userRole", userRole)
                     .withSubject(String.valueOf(userId))
                     .withIssuedAt(new Date())
                     .withExpiresAt(DateUtils.addMinutes(new Date(), EXPIRE_IN_MINUTE))

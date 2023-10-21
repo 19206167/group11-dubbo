@@ -23,7 +23,7 @@ import java.util.List;
  *
  * @author 刘梓健
  * @version 1.0
- * @Description ToDo
+ * @Description UserServiceImpl
  * @Date 2023/10/14 19:20
  */
 @DubboService(version = "1.0.0", interfaceClass = com.example.group11.service.user.UserService.class)
@@ -88,6 +88,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserModel, User, Long> impl
             }
             return builder.and(predicates.toArray(new Predicate[predicates.size()]));
         };
+
         Sort sort = Sort.by(Sort.Direction.ASC, "id");
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
         Page<User> UserPage = userRepository.findAll(spec, pageable);

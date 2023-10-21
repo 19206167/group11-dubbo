@@ -18,6 +18,7 @@ public enum ErrorCode {
     USER_LOGINNAME_PARAM(1004,"用户登录异常"),
     RECORD_EXISTED(1005, "记录已存在"),
     USER_PASSWORD_EXPIRED(1006,"用户密码已过期"),
+    USER_ROLE_ERROR(1007,"用户身份错误"),
 
     JOB_EXECUTION_ERROR(2000, "定时任务执行异常"),
     KAPTCHA_VALID_ERROR(2001, "验证码校验异常"),
