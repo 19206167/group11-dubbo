@@ -13,7 +13,7 @@ public class RespondentDetailVO {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "答主")
-    private RespondentVO respondentVO;
+    private UserVO userVO;
 
     @ApiModelProperty(value = "历史回答")
     private List<QuestionVO> answerHisList;

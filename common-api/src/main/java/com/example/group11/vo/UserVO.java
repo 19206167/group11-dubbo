@@ -7,7 +7,6 @@ import lombok.Data;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Data
 @ApiModel("用户详情")
@@ -36,11 +35,35 @@ public class UserVO implements Serializable {
     @ApiModelProperty(value = "电话号码")
     private String phone;
 
+    @ApiModelProperty(value = "头像图片路径")
+    private String portrait;
+
     @ApiModelProperty(value = "角色")
     private String role;
 
+    @ApiModelProperty(value = "账户收益")
+    private BigDecimal earnings;
+
     @ApiModelProperty(value = "账户余额")
     private BigDecimal balance;
+
+    @ApiModelProperty(value = "个人描述")
+    private String description;
+
+    @ApiModelProperty(value = "接收提问的最低金额")
+    private Long minimumAmount;
+
+    @ApiModelProperty(value = "答主领域")
+    private String uniqueField;
+
+    @ApiModelProperty(value = "答主语音自我介绍url")
+    private String userAudioDescriptionUrl;
+
+    @ApiModelProperty(value = "粉丝人数")
+    private Long followerCount;
+
+    @ApiModelProperty(value = "回答数")
+    private Long answerCount;
 
     @ApiModelProperty(value = "是否删除, 0-未删除, 1-已删除")
     private Boolean deleted;

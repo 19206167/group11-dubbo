@@ -2,9 +2,9 @@ package com.example.group11.controller.user;
 
 
 import com.example.group11.commons.utils.*;
+import com.example.group11.enums.RoleEnum;
 import com.example.group11.model.UserModel;
 import com.example.group11.service.user.UserService;
-import com.example.group11.vo.RespondentVO;
 import com.example.group11.vo.UserToRespondentVO;
 import com.example.group11.vo.UserVO;
 import com.example.group11.vo.query.UserQueryVO;
@@ -15,7 +15,6 @@ import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -56,26 +55,40 @@ public class UserController {
     @GetMapping("/sys/user/me")
     @ApiOperation(notes = "查看当前登录用户信息", value = "查看当前登录用户信息", tags = "用户管理")
     public RestResult<UserVO> queryCurrentUser(HttpServletRequest httpServletRequest) {
-        return RestResult.ok();
-    }
-
-    @PostMapping("/sys/user/me/audio")
-    @ApiOperation(notes = "上传音频自我介绍文件返回语音自我介绍url", value = "上传音频", tags = "用户管理")
-    public RestResult<String> uploadAudioFile(@RequestParam MultipartFile file, HttpServletRequest httpServletRequest) {
-        return RestResult.ok();
+        String token = JWTUtil.getToken(httpServletRequest);
+        Long userId = JWTUtil.getUserId(token);
+        log.info("[queryCurrentUser],userId={}", userId);
+        UserModel userModel = userService.findById(userId);
+        return RestResult.ok(OrikaUtil.map(userModel, UserVO.class));
     }
 
     @PostMapping("/sys/user/me/respondent")
-    @ApiOperation(notes = "成为答主,调用该接口前，首先调用上传语音自我介绍文件接口得到返回的语音自我介绍url", value = "成为答主", tags = "用户管理")
-//调用该接口前，首先调用上传语音自我介绍文件得到返回的语音自我介绍url
-    public RestResult<RespondentVO> toRespondent(@RequestBody UserToRespondentVO userToRespondentVO,
-                                                 HttpServletRequest httpServletRequest) {
-        return RestResult.ok();
+    @ApiOperation(notes = "成为答主,调用该接口前，首先调用统一文件上传接口上传语音自我介绍文件，并得到返回的语音自我介绍url",
+            value = "成为答主", tags = "用户管理")
+//首先调用统一文件上传接口上传语音自我介绍文件，并得到返回的语音自我介绍url
+    public RestResult<UserVO> toRespondent(@RequestBody UserToRespondentVO userToRespondentVO,
+                                           HttpServletRequest httpServletRequest) {
+        String token = JWTUtil.getToken(httpServletRequest);
+        Long userId = JWTUtil.getUserId(token);
+        log.info("[toRespondent],userId={}", userId);
+
+        UserModel userModel = userService.findById(userId);
+        if(!RoleEnum.READER.getKey().equals(userModel.getRole())) {
+            return RestResult.fail("只有读者才能成为作者！");
+        }
+        OrikaUtil.map(userToRespondentVO, userModel);
+        userModel.setRole(RoleEnum.WRITER.getKey());
+        userService.updateById(userModel);
+
+        return RestResult.ok(OrikaUtil.map(userModel, UserVO.class));
     }
 
+
     @PostMapping("/exapi/sys/user/id")
-    @ApiOperation(notes = "新增用户信息", value = "新增用户信息", tags = "用户管理")
-    public RestResult<UserVO> updateUserById(@RequestBody UserModel form) {
+    @ApiOperation(notes = "提交新注册用户信息，调用该接口前，首先调用统一文件上传接口上传用户头像文件，并得到返回的用户头像url",
+            value = "提交新注册用户信息", tags = "用户管理")
+    //首先调用统一文件上传接口上传用户头像文件，并得到返回的用户头像url
+    public RestResult<UserVO> insertUser(@RequestBody UserModel form) {
         log.info("[insertUser],form={}", form);
         String salt = RandomStringUtils.randomAlphanumeric(20);
         form.setSalt(salt);
@@ -85,18 +98,16 @@ public class UserController {
         return RestResult.ok(OrikaUtil.map(userModel, UserVO.class));
     }
 
-    @PutMapping("/sys/user/id/{id}")
-    @ApiOperation(notes = "修改用户信息", value = "修改用户信息", tags = "用户管理")
-    public RestResult<UserVO> updateUserById(@PathVariable Long id, @RequestBody UserModel form,
+    @PutMapping("/sys/user/id/")
+    @ApiOperation(notes = "用户修改自己的信息", value = "用户修改自己的信息", tags = "用户管理")
+    public RestResult<UserVO> updateUserById(@RequestBody UserModel form,
                                              HttpServletRequest httpServletRequest) {
         String token = JWTUtil.getToken(httpServletRequest);
         Long userId = JWTUtil.getUserId(token);
-        log.info("[insertUser],form={},userId={}", form, userId);
-        form.setId(id);
-//        form.setUpdateBy(userId.toString());
-        //用id更新用户数据
+        log.info("[updateUserById],form={},userId={}", form, userId);
+        form.setId(userId);
         userService.updateById(form);
-        UserModel userModel = userService.findById(id);
+        UserModel userModel = userService.findById(userId);
         return RestResult.ok(OrikaUtil.map(userModel, UserVO.class));
     }
 

@@ -1,4 +1,4 @@
-package com.example.group11.entity;
+package com.example.group11.entity.sql;
 
 import com.example.group11.commons.utils.BaseEntity;
 import lombok.Data;

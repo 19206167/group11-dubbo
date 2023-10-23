@@ -1,13 +1,10 @@
 package com.example.group11.service.qa;
 
 import com.example.group11.commons.utils.BaseService;
-import com.example.group11.entity.Question;
+import com.example.group11.entity.sql.Question;
 import com.example.group11.model.QuestionModel;
 import com.example.group11.vo.query.QuestionQueryVO;
 import org.springframework.data.domain.Page;
-
-
-import java.util.List;
 
 /**
  * FileName: QAService.java

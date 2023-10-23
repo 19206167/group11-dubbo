@@ -1,4 +1,5 @@
-package com.example.group11.entity;
+package com.example.group11.entity.sql;
+
 
 import com.example.group11.commons.utils.BaseEntity;
 import lombok.Data;
@@ -9,35 +10,28 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-/**
- * FileName: Like.java
- *
- * @author 刘梓健
- * @version 1.0
- * @Description Like Bean
- * @Date 2023/10/18 21:12
- */
 @Entity
 @DynamicUpdate
 @DynamicInsert
 @Data
-@Table(name = "like")
-public class Like implements BaseEntity<Integer>, Serializable {
+@Table(name = "follow")
+public class Follow implements BaseEntity<Long>, Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
-    private Long userId;
+    private Long beFollowedUserId;
 
-    private Integer questionId;
+    private Long followingUserId;
 
     private Boolean deleted;
 
     private LocalDateTime createTime;
 
     private String remark;
+
 }
 

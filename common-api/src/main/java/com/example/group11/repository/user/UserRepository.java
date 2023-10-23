@@ -1,7 +1,7 @@
 package com.example.group11.repository.user;
 
 import com.example.group11.commons.utils.BaseRepository;
-import com.example.group11.entity.User;
+import com.example.group11.entity.sql.User;
 import com.example.group11.repository.custom.UserRepositoryCustom;
 import org.springframework.stereotype.Repository;
 

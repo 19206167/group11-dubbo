@@ -5,7 +5,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import com.example.group11.commons.utils.CheckUtil;
-import com.example.group11.entity.User;
+import com.example.group11.entity.sql.User;
 import com.example.group11.enums.PageEnum;
 import com.example.group11.repository.custom.UserRepositoryCustom;
 import com.example.group11.vo.query.UserQueryVO;

@@ -1,7 +1,7 @@
 package com.example.group11.repository.user;
 
 import com.example.group11.commons.utils.BaseRepository;
-import com.example.group11.entity.Follow;
+import com.example.group11.entity.sql.Follow;
 
 /**
  * FileName: FollowRepository.java

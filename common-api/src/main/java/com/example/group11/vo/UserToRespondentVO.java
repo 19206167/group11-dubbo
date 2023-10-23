@@ -13,9 +13,6 @@ public class UserToRespondentVO {
     @ApiModelProperty(value = "最低金额")
     private Long minimumAmount;
 
-    @ApiModelProperty(value = "邮箱")
-    private String email;
-
     @ApiModelProperty(value = "领域")
     private String uniqueField;
 

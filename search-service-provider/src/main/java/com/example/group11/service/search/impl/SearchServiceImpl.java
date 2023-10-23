@@ -2,7 +2,6 @@ package com.example.group11.service.search.impl;
 
 import com.example.group11.service.search.SearchService;
 import org.apache.dubbo.config.annotation.DubboService;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * FileName: SearchServiceImpl.java
@@ -14,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 
 
-@DubboService(version="1.0.0", interfaceClass = com.example.group11.service.search.SearchService.class)
+@DubboService(version = "1.0.0", interfaceClass = com.example.group11.service.search.SearchService.class)
 public class SearchServiceImpl implements SearchService {
 
 }

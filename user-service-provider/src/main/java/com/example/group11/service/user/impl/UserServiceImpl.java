@@ -3,7 +3,7 @@ package com.example.group11.service.user.impl;
 import com.example.group11.commons.utils.BaseServiceImpl;
 import com.example.group11.commons.utils.CheckUtil;
 import com.example.group11.commons.utils.OrikaUtil;
-import com.example.group11.entity.User;
+import com.example.group11.entity.sql.User;
 import com.example.group11.enums.PageEnum;
 import com.example.group11.model.UserModel;
 import com.example.group11.repository.user.UserRepository;

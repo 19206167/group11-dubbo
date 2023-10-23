@@ -1,4 +1,4 @@
-package com.example.group11.entity;
+package com.example.group11.entity.sql;
 
 import com.example.group11.commons.utils.BaseEntity;
 import lombok.Data;
@@ -7,42 +7,33 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
-
-/**
- * FileName: TransactionHistory.java
- *
- * @author 刘梓健
- * @version 1.0
- * @Description Transaction Bean
- * @Date 2023/10/11 21:18
- */
 
 @Entity
 @DynamicUpdate
 @DynamicInsert
 @Data
-@Table(name = "transaction")
-public class Transaction implements BaseEntity<Long>, Serializable {
+@Table(name = "file")
+public class File implements BaseEntity<Integer>, Serializable {
+
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
-    private Long userId;
+    private String fileName;
 
-    private Long receiverId;
+    private String filePath;
 
-    private BigDecimal amount;
+    private String fileSize;
 
-    private Integer operation;
+    private String fileType;
 
     private Boolean deleted;
 
     private LocalDateTime createTime;
 
     private String remark;
-}
 
+}

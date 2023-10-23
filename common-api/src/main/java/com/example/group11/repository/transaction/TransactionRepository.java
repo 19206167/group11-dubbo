@@ -1,7 +1,7 @@
 package com.example.group11.repository.transaction;
 
 import com.example.group11.commons.utils.BaseRepository;
-import com.example.group11.entity.Transaction;
+import com.example.group11.entity.sql.Transaction;
 
 /**
  * FileName: TransactionRepository.java

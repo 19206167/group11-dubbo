@@ -1,8 +1,7 @@
 package com.example.group11.repository.qa;
 
 import com.example.group11.commons.utils.BaseRepository;
-import com.example.group11.entity.Comment;
-import io.swagger.models.auth.In;
+import com.example.group11.entity.sql.Comment;
 
 /**
  * FileName: CommentRepository.java

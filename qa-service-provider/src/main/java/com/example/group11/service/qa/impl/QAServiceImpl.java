@@ -4,9 +4,9 @@ import com.example.group11.commons.utils.BaseServiceImpl;
 import com.example.group11.commons.utils.CheckUtil;
 import com.example.group11.commons.utils.ErrorCode;
 import com.example.group11.commons.utils.Group11Exception;
-import com.example.group11.entity.Answer;
-import com.example.group11.entity.Question;
-import com.example.group11.entity.User;
+import com.example.group11.entity.sql.Answer;
+import com.example.group11.entity.sql.Question;
+import com.example.group11.entity.sql.User;
 import com.example.group11.enums.PageEnum;
 import com.example.group11.model.QuestionModel;
 import com.example.group11.repository.qa.AnswerRepository;
@@ -105,7 +105,7 @@ public class QAServiceImpl extends BaseServiceImpl<QuestionModel, Question, Inte
      * @author: liuzijian
      * @date: 2023/10/20 17:36
      * @param: [askerId]
-     * @return: java.util.List<com.example.group11.entity.Question>
+     * @return: java.util.List<com.example.group11.entity.sql.Question>
      **/
     @Override
     public Page<QuestionModel> getUserQuestionsByPage(QuestionQueryVO questionQueryVO) {

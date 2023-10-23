@@ -16,7 +16,7 @@ public class QuestionDetailVO {
     private QuestionVO questionVO;
 
     @ApiModelProperty(value = "答主")
-    private RespondentVO respondentVO;
+    private UserVO userVO;
 
     @ApiModelProperty(value = "推荐问答")
     private List<QuestionVO> questionVOList;

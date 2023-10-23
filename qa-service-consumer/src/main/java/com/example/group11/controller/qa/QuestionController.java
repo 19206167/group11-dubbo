@@ -3,25 +3,22 @@ package com.example.group11.controller.qa;
 
 import com.example.group11.commons.utils.JWTUtil;
 import com.example.group11.commons.utils.RestResult;
-import com.example.group11.entity.Question;
+import com.example.group11.entity.sql.Question;
 import com.example.group11.model.QuestionModel;
 import com.example.group11.service.qa.QAService;
 import com.example.group11.vo.QuestionDetailVO;
 import com.example.group11.vo.QuestionVO;
 import com.example.group11.vo.RespondentDetailVO;
-import com.example.group11.vo.RespondentVO;
+import com.example.group11.vo.UserVO;
 import com.example.group11.vo.query.QuestionQueryVO;
 import com.example.group11.vo.query.RespondentQueryVO;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.awt.print.Pageable;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
@@ -31,14 +28,14 @@ import java.util.Map;
 @Slf4j
 @RequestMapping("/api/questions")
 public class QuestionController {
-    
-    @DubboReference(version="1.0.0", interfaceClass = com.example.group11.service.qa.QAService.class)
+
+    @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.qa.QAService.class)
     QAService qaService;
 
     @GetMapping("/all/question-list/{pageNo}/{pageSize}")
     @ApiOperation(notes = "根据多条件查询全部回答的分页列表", value = "根据多条件查询全部回答的分页列表", tags = "问题管理")
     public RestResult<Page<QuestionModel>> queryAllQuestionList(@PathVariable Integer pageNo, @PathVariable Integer pageSize,
-                                                           HttpServletRequest httpServletRequest) {
+                                                                HttpServletRequest httpServletRequest) {
         // 获取当前用户id
         String token = JWTUtil.getToken(httpServletRequest);
         Long userId = JWTUtil.getUserId(token);
@@ -54,7 +51,7 @@ public class QuestionController {
 
     @GetMapping("/all/respondent-list")
     @ApiOperation(notes = "根据多条件查询全部答主的分页列表", value = "根据多条件查询全部答主的分页列表", tags = "问题管理")
-    public RestResult<Page<RespondentVO>> queryAllRespondentQuestionList(RespondentQueryVO params, HttpServletRequest httpServletRequest) {
+    public RestResult<Page<UserVO>> queryAllRespondentQuestionList(RespondentQueryVO params, HttpServletRequest httpServletRequest) {
 
         return RestResult.ok();
     }
@@ -67,7 +64,7 @@ public class QuestionController {
 
     @GetMapping("/hot/respondent-list")
     @ApiOperation(notes = "首页热门答主列表", value = "首页热门答主列表", tags = "问题管理")
-    public RestResult<List<RespondentVO>> queryHotRespondentList() {
+    public RestResult<List<UserVO>> queryHotRespondentList() {
         return RestResult.ok();
     }
 
@@ -130,7 +127,7 @@ public class QuestionController {
     @PostMapping("/question/{askUserId}")
     @ApiOperation(notes = "提问问题", value = "提问问题", tags = "问题管理")
     public RestResult<Map<String, Question>> askQuestion(@PathVariable Long responderId, @PathVariable String content,
-                                       @PathVariable BigDecimal reward, HttpServletRequest httpServletRequest) {
+                                                         @PathVariable BigDecimal reward, HttpServletRequest httpServletRequest) {
         // 获取当前用户id
         String token = JWTUtil.getToken(httpServletRequest);
         Long userId = JWTUtil.getUserId(token);

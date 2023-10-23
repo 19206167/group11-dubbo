@@ -1,19 +1,10 @@
 package com.example.group11.repository.impl.qa;
 
-import com.example.group11.commons.utils.CheckUtil;
-import com.example.group11.entity.Question;
-import com.example.group11.entity.User;
-import com.example.group11.enums.PageEnum;
-import com.example.group11.model.QuestionModel;
 import com.example.group11.repository.custom.QuestionRepositoryCustom;
-import com.example.group11.vo.query.QuestionQueryVO;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import java.util.List;
 
 /**
  * FileName: QuestionRepositoryImpl.java

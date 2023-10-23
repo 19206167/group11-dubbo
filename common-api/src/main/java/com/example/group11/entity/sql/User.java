@@ -1,16 +1,27 @@
-package com.example.group11.model;
+package com.example.group11.entity.sql;
 
+
+import com.example.group11.commons.utils.BaseEntity;
 import lombok.Data;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@Entity
+@DynamicUpdate
+@DynamicInsert
 @Data
-public class UserModel implements Serializable {
+@Table(name = "USER")
+public class User implements BaseEntity<Long>, Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String loginName;
@@ -27,7 +38,6 @@ public class UserModel implements Serializable {
 
     private String portrait;
 
-    //    0是读者，1是作者
     private Integer role;
 
     private BigDecimal earnings;
@@ -53,7 +63,4 @@ public class UserModel implements Serializable {
     private LocalDateTime updateTime;
 
     private String remark;
-
-
 }
-

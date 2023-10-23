@@ -1,4 +1,4 @@
-package com.example.group11.entity;
+package com.example.group11.entity.sql;
 
 import com.example.group11.commons.utils.BaseEntity;
 import lombok.Data;
@@ -9,12 +9,20 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * FileName: NewQuestion.java
+ *
+ * @author 刘梓健
+ * @version 1.0
+ * @Description New question bean
+ * @Date 2023/10/18 21:15
+ */
 @Entity
 @DynamicUpdate
 @DynamicInsert
 @Data
-@Table(name = "file")
-public class File implements BaseEntity<Integer>, Serializable {
+@Table(name = "new_question")
+public class NewQuestion implements BaseEntity<Integer>, Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -22,18 +30,13 @@ public class File implements BaseEntity<Integer>, Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String fileName;
+    private Long userId;
 
-    private String filePath;
-
-    private String fileSize;
-
-    private String fileType;
-
-    private Boolean deleted;
+    private Integer questionId;
 
     private LocalDateTime createTime;
 
     private String remark;
 
+    private Boolean deleted;
 }

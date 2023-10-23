@@ -1,6 +1,5 @@
 package com.example.group11;
 
-import com.example.group11.entity.File;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
 import org.springframework.boot.SpringApplication;
