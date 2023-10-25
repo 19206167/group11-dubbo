@@ -2,8 +2,10 @@ package com.example.group11.service.qa;
 
 import com.example.group11.commons.utils.BaseService;
 import com.example.group11.entity.sql.Question;
+import com.example.group11.model.AnswerModel;
 import com.example.group11.model.QuestionModel;
 import com.example.group11.vo.query.QuestionQueryVO;
+import io.swagger.models.auth.In;
 import org.springframework.data.domain.Page;
 
 /**
@@ -26,4 +28,8 @@ public interface QAService extends BaseService<QuestionModel, Integer> {
 
 //    回答问题
     void answerQuestionText(Long responderId, Integer questionId, String answerContent);
+
+    AnswerModel findAnswerModelById(Integer id);
+
+    Integer insertAnswer(AnswerModel answerModel);
 }

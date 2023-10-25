@@ -4,11 +4,12 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Data
 @ApiModel("问题详情")
-public class QuestionDetailVO {
+public class QuestionDetailVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

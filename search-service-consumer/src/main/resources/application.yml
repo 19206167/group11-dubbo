@@ -10,6 +10,12 @@ spring:
       max-file-size: 2048MB
       max-request-size: 2048MB
 
+  datasource:
+    url: jdbc:mysql://group11-database-do-user-14640959-0.b.db.ondigitalocean.com:25060/defaultdb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=true
+    username: doadmin
+    password: AVNS_UeUmefIueMk-xarcAHd
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
 # 服务运行端口
 server:
   port: 8605
@@ -24,6 +30,7 @@ dubbo:
   protocol:
     id: dubbo
     name: dubbo
+    serialization: kryo
   registry:
     id: zookeeper
     #    zookeeper运行端口

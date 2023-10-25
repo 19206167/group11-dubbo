@@ -124,10 +124,10 @@ public class QuestionController {
         return RestResult.ok();
     }
 
-    @PostMapping("/question/{askUserId}")
+    @PostMapping("/question/{responderId}")
     @ApiOperation(notes = "提问问题", value = "提问问题", tags = "问题管理")
-    public RestResult<Map<String, Question>> askQuestion(@PathVariable Long responderId, @PathVariable String content,
-                                                         @PathVariable BigDecimal reward, HttpServletRequest httpServletRequest) {
+    public RestResult<Map<String, Question>> askQuestion(@PathVariable Long responderId, String content,
+                                                         BigDecimal reward, HttpServletRequest httpServletRequest) {
         // 获取当前用户id
         String token = JWTUtil.getToken(httpServletRequest);
         Long userId = JWTUtil.getUserId(token);

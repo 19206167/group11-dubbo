@@ -2,8 +2,10 @@ package com.example.group11.controller.user;
 
 
 import com.example.group11.commons.utils.*;
+import com.example.group11.entity.es.UserES;
 import com.example.group11.enums.RoleEnum;
 import com.example.group11.model.UserModel;
+import com.example.group11.service.search.SearchService;
 import com.example.group11.service.user.UserService;
 import com.example.group11.vo.UserToRespondentVO;
 import com.example.group11.vo.UserVO;
@@ -25,6 +27,9 @@ public class UserController {
 
     @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.user.UserService.class)
     private UserService userService;
+
+    @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.search.SearchService.class)
+    private SearchService searchService;
 
     @PostMapping("/sys/user/login")
     @ApiOperation(notes = "用户登录获取token", value = "用户登录获取token", tags = "用户管理")
@@ -73,7 +78,7 @@ public class UserController {
         log.info("[toRespondent],userId={}", userId);
 
         UserModel userModel = userService.findById(userId);
-        if(!RoleEnum.READER.getKey().equals(userModel.getRole())) {
+        if (!RoleEnum.READER.getKey().equals(userModel.getRole())) {
             return RestResult.fail("只有读者才能成为作者！");
         }
         OrikaUtil.map(userToRespondentVO, userModel);
@@ -95,6 +100,9 @@ public class UserController {
         form.setPassword(ShiroUtil.sha256(form.getPassword(), salt));
         Long id = userService.insertOne(form);
         UserModel userModel = userService.findById(id);
+
+        UserES userES = OrikaUtil.map(userModel, UserES.class);
+        searchService.saveUser(userES);
         return RestResult.ok(OrikaUtil.map(userModel, UserVO.class));
     }
 

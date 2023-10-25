@@ -4,11 +4,12 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Data
 @ApiModel("问题")
-public class QuestionVO {
+public class QuestionVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

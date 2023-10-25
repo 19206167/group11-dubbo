@@ -2,6 +2,7 @@ package com.example.group11.vo;
 
 import io.swagger.annotations.ApiModelProperty;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -13,7 +14,9 @@ import java.util.Date;
  * @Description ToDo
  * @Date 2023/10/11 21:23
  */
-public class TransactionVO {
+public class TransactionVO implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "主键")
     private Long id;

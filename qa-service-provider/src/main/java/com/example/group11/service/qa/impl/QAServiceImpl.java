@@ -1,13 +1,11 @@
 package com.example.group11.service.qa.impl;
 
-import com.example.group11.commons.utils.BaseServiceImpl;
-import com.example.group11.commons.utils.CheckUtil;
-import com.example.group11.commons.utils.ErrorCode;
-import com.example.group11.commons.utils.Group11Exception;
+import com.example.group11.commons.utils.*;
 import com.example.group11.entity.sql.Answer;
 import com.example.group11.entity.sql.Question;
 import com.example.group11.entity.sql.User;
 import com.example.group11.enums.PageEnum;
+import com.example.group11.model.AnswerModel;
 import com.example.group11.model.QuestionModel;
 import com.example.group11.repository.qa.AnswerRepository;
 import com.example.group11.repository.qa.QuestionRepository;
@@ -65,15 +63,17 @@ public class QAServiceImpl extends BaseServiceImpl<QuestionModel, Question, Inte
     @Override
     public void createQuestion(Question question) throws Group11Exception {
         Long responderId = question.getResponderId();
-        User user = userRepository.getOne(responderId);
+        Optional<User> user = userRepository.findById(responderId);
 
-//        检测被提问者是否是回答者
-        if (user.getRole() != 1) {
-            throw new Group11Exception(ErrorCode.USER_ROLE_ERROR, "被提问者不是写作者，提问者只能向写作者提问。");
-        }
+        if(user.isPresent()) {
+            //        检测被提问者是否是回答者
+            if (user.get().getRole() != 1) {
+                throw new Group11Exception(ErrorCode.USER_ROLE_ERROR, "被提问者不是写作者，提问者只能向写作者提问。");
+            }
 
 //        向数据库中添加数据
-        questionRepository.save(question);
+            questionRepository.save(question);
+        }
     }
 
     /*
@@ -154,4 +154,15 @@ public class QAServiceImpl extends BaseServiceImpl<QuestionModel, Question, Inte
     }
 
 
+    @Override
+    public AnswerModel findAnswerModelById(Integer id) {
+        return OrikaUtil.map(answerRepository.findById(id), AnswerModel.class);
+    }
+
+    @Override
+    public Integer insertAnswer(AnswerModel answerModel) {
+        Answer answer = OrikaUtil.map(answerModel, Answer.class);
+        answer.setDeleted(false);
+        return answerRepository.save(answer).getId();
+    }
 }

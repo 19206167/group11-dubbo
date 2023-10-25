@@ -3,11 +3,11 @@ package com.example.group11.vo.query;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.List;
 
 @Data
-public class QuestionQueryVO extends QueryVO {
+public class QuestionQueryVO extends QueryVO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "提问者id")

@@ -4,9 +4,11 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
 @ApiModel("用户成为答主页面")
-public class UserToRespondentVO {
+public class UserToRespondentVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
