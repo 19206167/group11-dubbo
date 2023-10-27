@@ -6,15 +6,19 @@ import com.example.group11.commons.utils.RestResult;
 import com.example.group11.entity.sql.Question;
 import com.example.group11.model.QuestionModel;
 import com.example.group11.service.qa.QAService;
+import com.example.group11.service.search.SearchService;
+import com.example.group11.service.user.FollowService;
 import com.example.group11.vo.QuestionDetailVO;
 import com.example.group11.vo.QuestionVO;
 import com.example.group11.vo.RespondentDetailVO;
 import com.example.group11.vo.UserVO;
 import com.example.group11.vo.query.QuestionQueryVO;
 import com.example.group11.vo.query.RespondentQueryVO;
+import com.example.group11.websocket.WebSocketServer;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,11 +27,21 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @Slf4j
 @RequestMapping("/api/questions")
 public class QuestionController {
+
+    @Autowired
+    private WebSocketServer webSocketServer;
+
+    @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.user.FollowService.class)
+    private FollowService followService;
+
+    @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.search.SearchService.class)
+    private SearchService searchService;
 
     @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.qa.QAService.class)
     QAService qaService;
@@ -132,6 +146,14 @@ public class QuestionController {
         String token = JWTUtil.getToken(httpServletRequest);
         Long userId = JWTUtil.getUserId(token);
 
+        List<String> followingAskerUserIdList = followService.queryFollowingIdByFollowedId(userId).stream().
+                map(String::valueOf).collect(Collectors.toList());
+        webSocketServer.sendTo("您关注的用户提出了新的问题", followingAskerUserIdList);
+
+        List<String> followingResponderUserIdList = followService.queryFollowingIdByFollowedId(responderId).stream().
+                map(String::valueOf).collect(Collectors.toList());
+        webSocketServer.sendTo("您关注的用户被提问了", followingResponderUserIdList);
+
 //       所有身份的用户都可以发布问题，但是提问者回答者id不能相同
         if (!userId.equals(responderId)) {
             // paid默认为false
@@ -142,6 +164,7 @@ public class QuestionController {
             } catch (Exception e) {
                 return RestResult.fail(e.getMessage());
             }
+            webSocketServer.sendTo("有用户向您提出新的问题", responderId.toString());
             Map<String, Question> questionMap = new HashMap<>();
             questionMap.put("question", question);
             return RestResult.ok(questionMap);
@@ -160,6 +183,7 @@ public class QuestionController {
 //        删除问题
         try {
             deleted = qaService.deleteQuestion(userId, questionId);
+            searchService.deleteQa(questionId.toString());
         } catch (Exception e) {
             return RestResult.fail(e.getMessage());
         }

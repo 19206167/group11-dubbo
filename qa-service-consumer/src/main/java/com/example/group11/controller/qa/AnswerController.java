@@ -6,15 +6,20 @@ import com.example.group11.model.AnswerModel;
 import com.example.group11.model.QuestionModel;
 import com.example.group11.service.qa.QAService;
 import com.example.group11.service.search.SearchService;
+import com.example.group11.service.user.FollowService;
 import com.example.group11.vo.AnswerVO;
 import com.example.group11.vo.QuestionVO;
+import com.example.group11.websocket.WebSocketServer;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.DubboReference;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * FileName: AnswerController.java
@@ -29,6 +34,13 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 @RequestMapping("/api/answer")
 public class AnswerController {
+
+    @Autowired
+    private WebSocketServer webSocketServer;
+
+    @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.user.FollowService.class)
+    private FollowService followService;
+
     @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.qa.QAService.class)
     QAService qaService;
 
@@ -65,6 +77,15 @@ public class AnswerController {
                         qaES.setAnswerContent(answerContent);
                         qaES.setQaUrl(StringUtils.join(answerModel.getUrl(), ","));
                         searchService.saveQa(qaES);
+                        webSocketServer.sendTo("有答主已经解答了您的问题", questionModel.getAskerId().toString());
+
+                        List<String> followingResponderUserIdList = followService.queryFollowingIdByFollowedId(userId).stream().
+                                map(String::valueOf).collect(Collectors.toList());
+                        webSocketServer.sendTo("您关注的用户回答了新的问题", followingResponderUserIdList);
+
+                        List<String> followingAskerUserIdList = followService.queryFollowingIdByFollowedId(questionModel.getAskerId()).stream().
+                                map(String::valueOf).collect(Collectors.toList());
+                        webSocketServer.sendTo("您关注的用户的提问被回答了", followingAskerUserIdList);
                     } else {
                         throw new Group11Exception(ErrorCode.USER_ROLE_ERROR);
                     }

@@ -2,6 +2,7 @@ package com.example.group11.repository.qa;
 
 import com.example.group11.commons.utils.BaseRepository;
 import com.example.group11.entity.sql.Question;
+import com.example.group11.repository.custom.QuestionRepositoryCustom;
 
 
 /**

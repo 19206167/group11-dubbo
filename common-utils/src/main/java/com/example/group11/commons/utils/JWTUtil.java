@@ -19,7 +19,7 @@ public class JWTUtil {
     // 过期时间5分钟
     private static final int EXPIRE_IN_MINUTE = 24 * 60;
 
-    private static final String TOKEN_PARAM = "_token";
+    private static final String TOKEN_PARAM = "Authorization";
 
     public final static String hashAlgorithmName = "SHA-256";
 

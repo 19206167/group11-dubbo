@@ -85,6 +85,8 @@ public class UserController {
         userModel.setRole(RoleEnum.WRITER.getKey());
         userService.updateById(userModel);
 
+        UserES userES = OrikaUtil.map(userModel, UserES.class);
+        searchService.saveUser(userES);
         return RestResult.ok(OrikaUtil.map(userModel, UserVO.class));
     }
 
@@ -114,8 +116,14 @@ public class UserController {
         Long userId = JWTUtil.getUserId(token);
         log.info("[updateUserById],form={},userId={}", form, userId);
         form.setId(userId);
+        String salt = RandomStringUtils.randomAlphanumeric(20);
+        form.setSalt(salt);
+        form.setPassword(ShiroUtil.sha256(form.getPassword(), salt));
         userService.updateById(form);
         UserModel userModel = userService.findById(userId);
+
+        UserES userES = OrikaUtil.map(userModel, UserES.class);
+        searchService.saveUser(userES);
         return RestResult.ok(OrikaUtil.map(userModel, UserVO.class));
     }
 
