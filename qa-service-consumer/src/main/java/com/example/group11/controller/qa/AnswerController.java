@@ -1,25 +1,27 @@
 package com.example.group11.controller.qa;
 
-import com.example.group11.commons.utils.*;
+import com.example.group11.commons.utils.JWTUtil;
+import com.example.group11.commons.utils.OrikaUtil;
+import com.example.group11.commons.utils.RestResult;
 import com.example.group11.entity.es.QaES;
-import com.example.group11.entity.sql.Answer;
-import com.example.group11.entity.sql.Question;
 import com.example.group11.model.AnswerModel;
 import com.example.group11.model.QuestionModel;
 import com.example.group11.service.qa.QAService;
 import com.example.group11.service.search.SearchService;
+import com.example.group11.service.user.FollowService;
 import com.example.group11.vo.AnswerVO;
 import com.example.group11.vo.QuestionVO;
+import com.example.group11.websocket.WebSocketServer;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.models.auth.In;
+import org.springframework.beans.factory.annotation.Autowired;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * FileName: AnswerController.java
@@ -34,6 +36,14 @@ import java.util.List;
 @Slf4j
 @RequestMapping("/api/answer")
 public class AnswerController {
+
+    @Autowired
+    private WebSocketServer webSocketServer;
+
+    @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.user.FollowService.class)
+    private FollowService followService;
+
+
     @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.qa.QAService.class)
     QAService qaService;
 
@@ -62,14 +72,13 @@ public class AnswerController {
 
     @GetMapping("/{answerId}")
     @ApiOperation(notes = "查找文字回答", value = "查找文字回答", tags = "问题管理")
-    public RestResult<AnswerModel> getAnswerByAnswerId(@PathVariable Integer answerId){
+    public RestResult<AnswerModel> getAnswerByAnswerId(@PathVariable Integer answerId) {
         return RestResult.ok(qaService.findAnswerModelById(answerId));
     }
 
     @PostMapping("/audio/{questionId}")
     @ApiOperation(notes = "语音回答问题", value = "语音回答问题", tags = "问题管理")
-    public RestResult<QuestionVO> answerQuestionAudio(@PathVariable Integer questionId, @RequestBody AnswerVO answerVO,
-                                                     HttpServletRequest httpServletRequest) {
+    public RestResult<QuestionVO> answerQuestionAudio(@PathVariable Integer questionId, @RequestBody AnswerVO answerVO, HttpServletRequest httpServletRequest) {
 // 获取当前用户id
         String token = JWTUtil.getToken(httpServletRequest);
         Long userId = JWTUtil.getUserId(token);
@@ -88,6 +97,7 @@ public class AnswerController {
                 AnswerModel answerModel = new AnswerModel(questionId, answerContent, 1, url);
                 answerModel.setUserId(userId);
                 add(questionModel, answerModel);
+                sendPrompt(questionModel, userId);
             } else {
                 return RestResult.fail("非作者用户不能回答");
             }
@@ -99,8 +109,7 @@ public class AnswerController {
 
     @PostMapping("/text/{questionId}")
     @ApiOperation(notes = "文字回答问题", value = "文字回答问题", tags = "问题管理")
-    public RestResult<QuestionVO> answerQuestionText(@PathVariable Integer questionId, @RequestBody AnswerVO answerVO,
-                                                 HttpServletRequest httpServletRequest) {
+    public RestResult<QuestionVO> answerQuestionText(@PathVariable Integer questionId, @RequestBody AnswerVO answerVO, HttpServletRequest httpServletRequest) {
         // 获取当前用户id
         String token = JWTUtil.getToken(httpServletRequest);
         Long userId = JWTUtil.getUserId(token);
@@ -119,6 +128,7 @@ public class AnswerController {
                 AnswerModel answerModel = new AnswerModel(questionId, answerContent, 0);
                 answerModel.setUserId(userId);
                 add(questionModel, answerModel);
+                sendPrompt(questionModel, userId);
             } else {
                 return RestResult.fail("非作者用户不能回答");
             }
@@ -130,8 +140,7 @@ public class AnswerController {
 
     @PutMapping("/text/update/{questionId}")
     @ApiOperation(notes = "更新文字回答", value = "更新文字回答", tags = "问题管理")
-    public RestResult<AnswerModel> updateTextQuestionAnswer(@PathVariable Integer questionId, @RequestBody AnswerVO answerVO,
-                                                       HttpServletRequest httpServletRequest) {
+    public RestResult<AnswerModel> updateTextQuestionAnswer(@PathVariable Integer questionId, @RequestBody AnswerVO answerVO, HttpServletRequest httpServletRequest) {
         // 获取当前用户id
         String token = JWTUtil.getToken(httpServletRequest);
         Long userId = JWTUtil.getUserId(token);
@@ -144,7 +153,7 @@ public class AnswerController {
         AnswerModel answerModel = qaService.updateTextQuestionAnswer(userId, questionId, answerVO.getUrl(), answerContent);
 
 //        更新qs中的数据
-        QaES qaES = searchService.getQaById(questionId.toString()).get();
+        QaES qaES = searchService.getQaById(questionId.toString());
 
         qaES.setAnswerContent(answerContent);
 
@@ -154,9 +163,18 @@ public class AnswerController {
         return RestResult.ok(answerModel);
     }
 
+    private void sendPrompt(QuestionModel questionModel, Long userId) {
+        webSocketServer.sendTo("有答主已经解答了您的问题", questionModel.getAskerId().toString());
+        List<String> followingResponderUserIdList = followService.queryFollowingIdByFollowedId(userId).stream().
+                map(String::valueOf).collect(Collectors.toList());
+        webSocketServer.sendTo("您关注的用户回答了新的问题", followingResponderUserIdList);
 
+        List<String> followingAskerUserIdList = followService.queryFollowingIdByFollowedId(questionModel.getAskerId()).stream().
+                map(String::valueOf).collect(Collectors.toList());
+        webSocketServer.sendTo("您关注的用户的提问被回答了", followingAskerUserIdList);
+    }
 
-    private void add(QuestionModel questionModel, AnswerModel answerModel){
+    private void add(QuestionModel questionModel, AnswerModel answerModel) {
         questionModel.setAnswerId(qaService.answerQuestion(answerModel).getId());
         qaService.updateById(questionModel);
 //                        将问题添加到回es中
