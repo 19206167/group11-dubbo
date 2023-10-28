@@ -32,6 +32,7 @@ dubbo:
     name: dubbo
     #    dubbo端口
     port: 20883
+    serialization: kryo
   registry:
     id: zookeeper
     #    zookeeper运行端口

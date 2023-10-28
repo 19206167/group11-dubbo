@@ -6,6 +6,7 @@ import com.example.group11.entity.es.UserES;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * FileName: SearchService.java
@@ -20,6 +21,8 @@ public interface SearchService {
     Boolean saveUser(UserES... userES);
 
     Boolean saveQa(QaES... qaES);
+
+    Optional<QaES> getQaById(String id);
 
     Boolean deleteUser(String id);
 

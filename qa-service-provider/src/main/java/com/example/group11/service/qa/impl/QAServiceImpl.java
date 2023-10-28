@@ -1,14 +1,11 @@
 package com.example.group11.service.qa.impl;
 
 import com.example.group11.commons.utils.*;
-import com.example.group11.entity.sql.Answer;
-import com.example.group11.entity.sql.Question;
-import com.example.group11.entity.sql.User;
+import com.example.group11.entity.sql.*;
 import com.example.group11.enums.PageEnum;
 import com.example.group11.model.AnswerModel;
 import com.example.group11.model.QuestionModel;
-import com.example.group11.repository.qa.AnswerRepository;
-import com.example.group11.repository.qa.QuestionRepository;
+import com.example.group11.repository.qa.*;
 import com.example.group11.repository.user.UserRepository;
 import com.example.group11.service.qa.QAService;
 import com.example.group11.vo.query.QuestionQueryVO;
@@ -18,9 +15,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Predicate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static jdk.nashorn.internal.runtime.regexp.joni.Config.log;
 
 /**
  * FileName: QAService.java
@@ -38,6 +43,15 @@ public class QAServiceImpl extends BaseServiceImpl<QuestionModel, Question, Inte
 
     @Autowired
     AnswerRepository answerRepository;
+
+    @Autowired
+    EavedropedQuestionRepository eavedropedQuestionRepository;
+
+    @Autowired
+    LikeRepository likeRepository;
+
+    @Autowired
+    CommentRepository commentRepository;
 
     @Autowired
     UserRepository userRepository;
@@ -126,6 +140,12 @@ public class QAServiceImpl extends BaseServiceImpl<QuestionModel, Question, Inte
         return findPageByExample(questionModel, pageable);
     }
 
+//    根据问题id查到对应的答案
+    @Override
+    public AnswerModel getAnswerByQuestionId(Integer questionId) {
+        return answerRepository.findByQuestionId(questionId);
+    }
+
     /**
      * @description: 回答问题（文本回答）
      * @author: liuzijian
@@ -134,35 +154,227 @@ public class QAServiceImpl extends BaseServiceImpl<QuestionModel, Question, Inte
      * @return: void
      **/
     @Override
-    public void answerQuestionText(Long responderId, Integer questionId, String answerContent) throws Group11Exception{
+    public AnswerModel answerQuestion(AnswerModel answerModel) throws Group11Exception{
 
-        Optional<Question> question = questionRepository.findById(questionId);
+        Optional<Question> question = questionRepository.findById(answerModel.getQuestionId());
+        Answer answer;
 
 //        验证问题存在，且问题回答者与当前用户匹配
         if (question.isPresent() ) {
-            if (question.get().getResponderId().equals(responderId)) {
+            if (question.get().getResponderId().equals(answerModel.getUserId())) {
 //                添加回答，并且更新问题中的答案id
-                Answer answer = new Answer(questionId, answerContent, 0);
+                answer = new Answer(answerModel.getQuestionId(), answerModel.getContent(), 0);
                 answerRepository.save(answer);
                 question.get().setAnswerId(answer.getId());
+                questionRepository.save(question.get());
             } else {
                 throw new Group11Exception(ErrorCode.USER_ROLE_ERROR);
             }
         } else {
             throw new Group11Exception(ErrorCode.EMPTY_RESULT);
         }
+        return OrikaUtil.map(answer, AnswerModel.class);
+    }
+
+    @Override
+    public AnswerModel updateTextQuestionAnswer(Long userId, Integer answerId, List<String> url, String answerContent) {
+        Optional<Answer> answer = answerRepository.findById(answerId);
+
+        if (answer.isPresent()) {
+            if (answer.get().getUserId().equals(userId)) {
+                answer.get().setContent(answerContent);
+                answerRepository.save(answer.get());
+            } else {
+                throw new Group11Exception(ErrorCode.USER_ROLE_ERROR);
+            }
+        } else {
+            throw new Group11Exception(ErrorCode.EMPTY_RESULT);
+        }
+        return OrikaUtil.map(answer.get(), AnswerModel.class);
     }
 
 
     @Override
-    public AnswerModel findAnswerModelById(Integer id) {
-        return OrikaUtil.map(answerRepository.findById(id), AnswerModel.class);
+    public AnswerModel findAnswerModelById(Integer answerId) {
+        return OrikaUtil.map(answerRepository.findById(answerId), AnswerModel.class);
     }
 
     @Override
-    public Integer insertAnswer(AnswerModel answerModel) {
-        Answer answer = OrikaUtil.map(answerModel, Answer.class);
-        answer.setDeleted(false);
-        return answerRepository.save(answer).getId();
+    public boolean checkWhetherGetAnswer(Long userId, Integer questionId) {
+        Optional<Question> question = questionRepository.findById(questionId);
+        if (question.get().getAskerId().equals(userId) || question.get().getResponderId().equals(userId)) {
+            return true;
+        } else {
+            Optional<EavedropedQuestion> eavedropedQuestion = eavedropedQuestionRepository.findByQuestionIdAndUserId(questionId, userId);
+            if (eavedropedQuestion.isPresent()) {
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
+
+    @Override
+    public boolean checkUserEavesdropQuestion(Long userId, Integer questionId) {
+        Optional<EavedropedQuestion> eavedrop = eavedropedQuestionRepository.findByQuestionIdAndUserId(questionId, userId);
+        log.println(eavedrop.get());
+        if (!eavedrop.isPresent()) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean eavesdropQuestionById(Long userId, Integer questionId, Integer transactionId) {
+
+        Optional<Question> question = questionRepository.findById(questionId);
+
+        if (question.get().getAnswerId() == -1) {
+            throw new Group11Exception(ErrorCode.COMMON_ERROR, "问题没有答案");
+        }
+
+        Optional<EavedropedQuestion> eavedrop = eavedropedQuestionRepository.findByQuestionIdAndUserId(questionId, userId);
+
+//        如果当前对象不存在，更新，如果已经存在，插入新的数据
+        if (!eavedrop.isPresent()) {
+            EavedropedQuestion eavedropedQuestion = new EavedropedQuestion(userId, questionId, transactionId);
+            eavedropedQuestionRepository.save(eavedropedQuestion);
+        }
+        return true;
+    }
+
+//    查看一个用户的所有偷听的问题
+    @Override
+    public Page<Question> checkEavesdropQuestionByUserIdByPage(Long userId, Integer pageNo, Integer pageSize) {
+//        定义pageable
+        pageNo = CheckUtil.isNotEmpty(pageNo) ? pageNo : PageEnum.DEFAULT_PAGE_NO.getKey();
+        pageSize = CheckUtil.isNotEmpty(pageSize) ? pageSize : PageEnum.DEFAULT_PAGE_SIZE.getKey();
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+//        查找偷听的问题id
+        Page<EavedropedQuestion> page = eavedropedQuestionRepository.findAllByUserId(userId, pageable);
+
+        List<EavedropedQuestion> eavedrops = page.getContent();
+
+        List<Integer> questionIDs = eavedrops.stream().map((eavedrop) -> eavedrop.getId()).collect(Collectors.toList());
+
+//        构建specification
+//        没测试过，不知道是否正确!!!
+        Specification<Question> spec = (root, query, builder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            CriteriaBuilder.In<Integer> in = builder.in(root.get("questionId"));
+//            添加in 条件
+            for (Integer id: questionIDs) {
+                in.value(id);
+                predicates.add(in);
+            }
+
+            return query.where(predicates.toArray(new Predicate[predicates.size()])).getRestriction();
+        };
+
+//        查询到所有的问题并返回
+        return questionRepository.findAll(spec, pageable);
+    }
+
+    @Override
+    public Page<Question> checkUnansweredQuestionByResponderIdByPage(Long responderId, Integer pageNo, Integer pageSize) {
+        //        定义pageable
+        pageNo = CheckUtil.isNotEmpty(pageNo) ? pageNo : PageEnum.DEFAULT_PAGE_NO.getKey();
+        pageSize = CheckUtil.isNotEmpty(pageSize) ? pageSize : PageEnum.DEFAULT_PAGE_SIZE.getKey();
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+
+//        responderId = responderId, answerId = -1;
+        Specification<Question> spec = (root, query, builder) ->
+                builder.and(builder.equal(root.get("responderId"), responderId), builder.equal(root.get("answerId"), -1));
+
+        return questionRepository.findAll(spec, pageable);
+    }
+
+//    查看用户已回答问题
+    @Override
+    public Page<Question> getResponderAnsweredQuestionsByPage(Long responderId, Integer pageNo, Integer pageSize) {
+        //        定义pageable
+        pageNo = CheckUtil.isNotEmpty(pageNo) ? pageNo : PageEnum.DEFAULT_PAGE_NO.getKey();
+        pageSize = CheckUtil.isNotEmpty(pageSize) ? pageSize : PageEnum.DEFAULT_PAGE_SIZE.getKey();
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+
+        //        responderId = responderId, answerId != 0;
+        Specification<Question> spec = (root, query, builder) ->
+                builder.and(builder.equal(root.get("responderId"), responderId), builder.notEqual(root.get("answerId"), -1));
+
+        return questionRepository.findAll(spec, pageable);
+    }
+
+//    点赞
+    @Override
+    public boolean like(Long userId, Integer questionId) {
+        if (likeRepository.findByUserIdAndQuestionId(userId, questionId).isPresent()) {
+            return false;
+        }
+        Like like = new Like(userId, questionId);
+        likeRepository.save(like);
+
+        Optional<Question> question = questionRepository.findById(questionId);
+        question.get().setLikeNum(question.get().getLikeNum() + 1);
+
+        questionRepository.save(question.get());
+        return true;
+    }
+
+//    取消点赞
+    @Override
+    public boolean cancelLike(Long userId, Integer questionId) {
+        return likeRepository.deleteByUserIdAndQuestionId(userId, questionId);
+    }
+
+//    获取点赞数量
+    @Override
+    public Integer getLikeNum(Integer questionId) {
+        return questionRepository.findById(questionId).get().getLikeNum();
+    }
+
+    @Override
+    public boolean comment(Long userId, Integer questionId, String content) {
+        Comment comment  = new Comment(userId, questionId, content);
+        commentRepository.save(comment);
+
+        Optional<Question> question = questionRepository.findById(questionId);
+        question.get().setCommentNum(question.get().getCommentNum() + 1);
+
+        questionRepository.save(question.get());
+        return true;
+    }
+
+    @Override
+    public boolean deleteComment(Long userId, Integer questionId, Integer commentId) {
+        return commentRepository.deleteByIdAndUserIdAndQuestionId(commentId, userId, questionId);
+    }
+
+    @Override
+    public Integer getCommentNum(Integer questionId) {
+        return questionRepository.findById(questionId).get().getCommentNum();
+    }
+
+    @Override
+    public Page<Comment> getCommentByQuestionByPage(Integer questionId, Integer pageNo, Integer pageSize) {
+        //        定义pageable
+        pageNo = CheckUtil.isNotEmpty(pageNo) ? pageNo : PageEnum.DEFAULT_PAGE_NO.getKey();
+        pageSize = CheckUtil.isNotEmpty(pageSize) ? pageSize : PageEnum.DEFAULT_PAGE_SIZE.getKey();
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+
+//        responderId = responderId, answerId = 0;
+        Specification<Comment> spec = (root, query, builder) -> builder.equal(root.get("questionId"), questionId);
+
+        return commentRepository.findAll(spec, pageable);
+    }
+
+//    @Override
+//    public Integer insertAnswer(AnswerModel answerModel) {
+//        Answer answer = OrikaUtil.map(answerModel, Answer.class);
+//        answer.setDeleted(false);
+//        return answerRepository.save(answer).getId();
+//    }
 }

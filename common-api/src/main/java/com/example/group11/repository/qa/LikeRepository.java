@@ -3,6 +3,8 @@ package com.example.group11.repository.qa;
 import com.example.group11.commons.utils.BaseRepository;
 import com.example.group11.entity.sql.Like;
 
+import java.util.Optional;
+
 /**
  * FileName: LikeRepository.java
  *
@@ -12,4 +14,7 @@ import com.example.group11.entity.sql.Like;
  * @Date 2023/10/14 21:28
  */
 public interface LikeRepository extends BaseRepository<Like, Integer> {
+    boolean deleteByUserIdAndQuestionId(Long userId, Integer questionId);
+
+    Optional<Like> findByUserIdAndQuestionId(Long userId, Integer questionId);
 }

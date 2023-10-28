@@ -53,7 +53,5 @@ public class UserModel implements Serializable {
     private LocalDateTime updateTime;
 
     private String remark;
-
-
 }
 

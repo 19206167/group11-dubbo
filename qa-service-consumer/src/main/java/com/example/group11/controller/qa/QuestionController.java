@@ -6,13 +6,16 @@ import com.example.group11.commons.utils.RestResult;
 import com.example.group11.entity.sql.Question;
 import com.example.group11.model.QuestionModel;
 import com.example.group11.service.qa.QAService;
+import com.example.group11.service.transaction.TransactionService;
 import com.example.group11.vo.QuestionDetailVO;
 import com.example.group11.vo.QuestionVO;
 import com.example.group11.vo.RespondentDetailVO;
 import com.example.group11.vo.UserVO;
 import com.example.group11.vo.query.QuestionQueryVO;
 import com.example.group11.vo.query.RespondentQueryVO;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.data.domain.Page;
@@ -26,19 +29,19 @@ import java.util.Map;
 
 @RestController
 @Slf4j
-@RequestMapping("/api/questions")
+@RequestMapping("/api/question")
 public class QuestionController {
 
     @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.qa.QAService.class)
     QAService qaService;
 
-    @GetMapping("/all/question-list/{pageNo}/{pageSize}")
-    @ApiOperation(notes = "根据多条件查询全部回答的分页列表", value = "根据多条件查询全部回答的分页列表", tags = "问题管理")
-    public RestResult<Page<QuestionModel>> queryAllQuestionList(@PathVariable Integer pageNo, @PathVariable Integer pageSize,
+    @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.transaction.TransactionService.class, check = false)
+    TransactionService transactionService;
+
+    @GetMapping("/all/{userId}")
+    @ApiOperation(notes = "查询用户全部问题(已测试)", value = "查询用户全部问题", tags = "问题管理")
+    public RestResult<Page<QuestionModel>> queryAllQuestionList(@PathVariable Long userId, Integer pageNo, Integer pageSize,
                                                                 HttpServletRequest httpServletRequest) {
-        // 获取当前用户id
-        String token = JWTUtil.getToken(httpServletRequest);
-        Long userId = JWTUtil.getUserId(token);
 
         QuestionQueryVO questionQueryVO = new QuestionQueryVO();
         questionQueryVO.setAskerId(userId);
@@ -49,53 +52,28 @@ public class QuestionController {
         return RestResult.ok(questions);
     }
 
-    @GetMapping("/all/respondent-list")
-    @ApiOperation(notes = "根据多条件查询全部答主的分页列表", value = "根据多条件查询全部答主的分页列表", tags = "问题管理")
-    public RestResult<Page<UserVO>> queryAllRespondentQuestionList(RespondentQueryVO params, HttpServletRequest httpServletRequest) {
-
-        return RestResult.ok();
-    }
+//    @GetMapping("/all/respondent-list")
+//    @ApiOperation(notes = "根据多条件查询全部答主的分页列表", value = "根据多条件查询全部答主的分页列表", tags = "问题管理")
+//    public RestResult<Page<UserVO>> queryAllRespondentQuestionList(RespondentQueryVO params, HttpServletRequest httpServletRequest) {
+//
+//        return RestResult.ok();
+//    }
 
     @GetMapping("/hot/question-list")
-    @ApiOperation(notes = "首页热门回答列表", value = "首页热门回答列表", tags = "问题管理")
+    @ApiOperation(notes = "首页热门回答列表（还没有想好按照哪种方式判断热门回答）", value = "首页热门回答列表", tags = "问题管理")
     public RestResult<List<QuestionVO>> queryHotQuestionList() {
         return RestResult.ok();
     }
 
-    @GetMapping("/hot/respondent-list")
-    @ApiOperation(notes = "首页热门答主列表", value = "首页热门答主列表", tags = "问题管理")
-    public RestResult<List<UserVO>> queryHotRespondentList() {
-        return RestResult.ok();
-    }
-
-    @GetMapping("/{questionId}")
-    @ApiOperation(notes = "问答详情", value = "问答详情", tags = "问题管理")
-    public RestResult<QuestionDetailVO> queryQuestionDetail(@PathVariable Long questionId) {
-        return RestResult.ok();
-    }
-
-    @GetMapping("/respondent/{id}")
-    @ApiOperation(notes = "答主详情", value = "答主详情", tags = "问题管理")
-    public RestResult<RespondentDetailVO> queryRespondentDetail(@PathVariable Long id) {
-        return RestResult.ok();
-    }
-
-    @GetMapping("/my/eavesdropping-list")
-    @ApiOperation(notes = "我的偷听", value = "我的偷听", tags = "问题管理")
-    public RestResult<List<QuestionVO>> queryMyEavesdroppingList() {
-        return RestResult.ok();
-    }
-
-    @GetMapping("/my/question-list/{pageNo}/{pageSize}")
-    @ApiOperation(notes = "我的问题", value = "我的问题", tags = "问题管理")
-    public RestResult<Page<QuestionModel>> queryMyQuestionList(@PathVariable Integer pageNo, @PathVariable Integer pageSize,
+    @GetMapping("/my")
+    @ApiOperation(notes = "我的问题(已测试)", value = "我的问题", tags = "问题管理")
+    public RestResult<Page<QuestionModel>> queryMyQuestionList(Integer pageNo, Integer pageSize,
                                                                HttpServletRequest httpServletRequest) {
         // 获取当前用户id
         String token = JWTUtil.getToken(httpServletRequest);
         Long userId = JWTUtil.getUserId(token);
 //        根据当前用户的userId查询问题
         try {
-//
             QuestionQueryVO questionQueryVO = new QuestionQueryVO();
             questionQueryVO.setAskerId(userId);
             questionQueryVO.setPageNo(pageNo);
@@ -110,24 +88,72 @@ public class QuestionController {
     }
 
     @GetMapping("/my/answer-list")
-    @ApiOperation(notes = "我的回答", value = "我的回答", tags = "问题管理")
-    public RestResult<List<QuestionVO>> queryMyAnswerList() {
-        return RestResult.ok();
+    @ApiOperation(notes = "查看我的回答的问题(已测试)", value = "查看我的回答的问题", tags = "问题管理")
+    public RestResult<Page<Question>> queryMyAnswerList(Integer pageNo, Integer pageSize, HttpServletRequest httpServletRequest) {
+        // 获取当前用户id
+        String token = JWTUtil.getToken(httpServletRequest);
+        Long userId = JWTUtil.getUserId(token);
+
+        return RestResult.ok(qaService.getResponderAnsweredQuestionsByPage(userId, pageNo, pageSize));
     }
 
-    @GetMapping("/eavesdropping/{id}")
-    @ApiOperation(notes = "偷听问题,若该回答还有音频版本，则调用该接口后，再调用统一下载接口对应音频文件实现在线播放",
+    @GetMapping("/my/waiting_answer-list")
+    @ApiOperation(notes = "查看待回答的问题（已测试）", value = "查看待回答的问题", tags = "问题管理")
+    public RestResult<Page<Question>> queryMyWaitingAnswerList(Integer pageNo, Integer pageSize, HttpServletRequest httpServletRequest) {
+        // 获取当前用户id
+        String token = JWTUtil.getToken(httpServletRequest);
+        Long userId = JWTUtil.getUserId(token);
+
+        userId = 3L;
+
+        return RestResult.ok(qaService.checkUnansweredQuestionByResponderIdByPage(userId, pageNo, pageSize));
+    }
+
+    @GetMapping("/eavesdropping")
+    @ApiOperation(notes = "查看我的偷听记录(已测试)", value = "查看我的偷听记录", tags = "问题管理")
+    public RestResult<Page<Question>> queryMyEavesdroppingQuestion(Integer pageNo, Integer pageSize, HttpServletRequest httpServletRequest) {
+        // 获取当前用户id
+        String token = JWTUtil.getToken(httpServletRequest);
+        Long userId = JWTUtil.getUserId(token);
+
+        return RestResult.ok(qaService.checkEavesdropQuestionByUserIdByPage(userId, pageNo, pageSize));
+    }
+
+    @GetMapping("/eavesdropping/{questionId}")
+//    若该回答还有音频版本，则调用该接口后，再调用统一下载接口对应音频文件实现在线播放
+    @ApiOperation(notes = "偷听问题(已测试)",
             value = "偷听问题", tags = "问题管理")
-    public RestResult<QuestionVO> eavesdroppingQuestion(@PathVariable Integer id, HttpServletRequest httpServletRequest) {
-        //扣钱，变更问题对该用户状态(不可见->可见)，返回回答内容
-        //若该回答还有音频版本，则调用该接口后，再调用统一下载接口对应音频文件实现在线播放
-        return RestResult.ok();
+    public RestResult<Boolean> eavesdroppingQuestion(@PathVariable Integer questionId, HttpServletRequest httpServletRequest) {
+        // 获取当前用户id
+        String token = JWTUtil.getToken(httpServletRequest);
+        Long userId = JWTUtil.getUserId(token);
+
+        boolean paid = qaService.checkUserEavesdropQuestion(userId, questionId);
+
+        if (paid) {
+            return RestResult.ok(paid);
+        } else {
+            // 说明该用户没有购买此问题
+            try {
+                // 扣钱，变更问题对该用户状态(不可见->可见)，返回回答内容
+//        transactionService.payForEavesdroppingQuestion(userId, questionId);
+                Integer transactionId = 0;
+                // 若该回答还有音频版本，则调用该接口后，再调用统一下载接口对应音频文件实现在线播放
+                qaService.eavesdropQuestionById(userId, questionId, transactionId);
+            } catch (Exception e) {
+                return RestResult.fail(e.getMessage());
+            }
+            return RestResult.ok(true);
+        }
     }
 
-    @PostMapping("/question/{responderId}")
-    @ApiOperation(notes = "提问问题", value = "提问问题", tags = "问题管理")
-    public RestResult<Map<String, Question>> askQuestion(@PathVariable Long responderId, String content,
-                                                         BigDecimal reward, HttpServletRequest httpServletRequest) {
+
+
+    @PostMapping("/{responderId}/{content}/{reward:.+}")
+    @ApiOperation(notes = "提问问题，首先创建问题，然后再进行支付（已测试）", value = "提问问题", tags = "问题管理")
+//    还没有支付
+    public RestResult<Map<String, Question>> askQuestion(@PathVariable Long responderId, @PathVariable String content,
+                                                         @PathVariable Double reward, HttpServletRequest httpServletRequest) {
         // 获取当前用户id
         String token = JWTUtil.getToken(httpServletRequest);
         Long userId = JWTUtil.getUserId(token);
@@ -136,7 +162,11 @@ public class QuestionController {
         if (!userId.equals(responderId)) {
             // paid默认为false
             // answerId默认为-1, 表示未回答，回答时更新
-            Question question = new Question(userId, responderId, content, reward, false, -1, 0, 0);
+            log.info(String.valueOf(reward));
+            BigDecimal price = BigDecimal.valueOf(reward);
+            log.info(String.valueOf(price));
+            Question question = new Question(userId, responderId, content, price, false, -1, 0, 0);
+            log.info(String.valueOf(question.getReward()));
             try {
                 qaService.createQuestion(question);
             } catch (Exception e) {
@@ -150,8 +180,8 @@ public class QuestionController {
         }
     }
 
-    @DeleteMapping("/question/{questionId}")
-    @ApiOperation(notes = "删除问题", value = "删除问题", tags = "问题管理")
+    @DeleteMapping("/{questionId}")
+    @ApiOperation(notes = "删除问题（已测试）", value = "删除问题", tags = "问题管理")
     public RestResult<Boolean> deleteQuestion(@PathVariable Integer questionId, HttpServletRequest httpServletRequest) {
         // 获取当前用户id
         String token = JWTUtil.getToken(httpServletRequest);

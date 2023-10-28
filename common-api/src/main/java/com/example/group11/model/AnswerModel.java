@@ -1,10 +1,10 @@
 package com.example.group11.model;
 
 import lombok.Data;
-import org.hibernate.mapping.List;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class AnswerModel implements Serializable {
@@ -13,6 +13,8 @@ public class AnswerModel implements Serializable {
 
     private Integer id;
 
+    private Long userId;
+
     private Integer questionId;
 
     private String content;
@@ -20,7 +22,7 @@ public class AnswerModel implements Serializable {
     //    0表示文字回答，1表示语音回答
     private Integer type;
 
-    private List url;
+    private List<String> url;
 
     private Boolean deleted;
 
@@ -31,7 +33,7 @@ public class AnswerModel implements Serializable {
     public AnswerModel() {
     }
 
-    public AnswerModel(Integer questionId, String content, Integer type, List url) {
+    public AnswerModel(Integer questionId, String content, Integer type, List<String> url) {
         this.questionId = questionId;
         this.content = content;
         this.type = type;

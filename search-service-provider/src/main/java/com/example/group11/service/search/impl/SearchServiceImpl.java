@@ -61,6 +61,11 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
+    public Optional<QaES> getQaById(String id) {
+        return QuestionAndAnswerESRepository.findById(id);
+    }
+
+    @Override
     public Boolean deleteUser(String id) {
         userESRepository.deleteById(id);
         return null;
