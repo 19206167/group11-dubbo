@@ -61,7 +61,13 @@ public class UserServiceImpl extends BaseServiceImpl<UserModel, User, Long> impl
     @Override
     public List<UserModel> queryFanListByUserId(Long userId, UserQueryVO params) {
         List<User> userList = userRepository.queryFanListByUserId(userId, params);
-        return OrikaUtil.mapAsList(userList, UserModel.class);
+        return CheckUtil.isNotEmpty(userList) ? OrikaUtil.mapAsList(userList, UserModel.class) : null;
+    }
+
+    @Override
+    public List<UserModel> queryFollowListByUserId(Long userId, UserQueryVO params) {
+        List<User> userList = userRepository.queryFollowListByUserId(userId, params);
+        return CheckUtil.isNotEmpty(userList) ? OrikaUtil.mapAsList(userList, UserModel.class) : null;
     }
 
     @Override
@@ -95,5 +101,6 @@ public class UserServiceImpl extends BaseServiceImpl<UserModel, User, Long> impl
         List<UserModel> userModelList = OrikaUtil.mapAsList(UserPage.getContent(), UserModel.class);
         return new PageImpl<>(userModelList, pageable, UserPage.getTotalElements());
     }
+
 
 }

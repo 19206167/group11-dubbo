@@ -4,7 +4,6 @@ import com.example.group11.commons.utils.BaseServiceImpl;
 import com.example.group11.entity.sql.Follow;
 import com.example.group11.entity.sql.User;
 import com.example.group11.model.FollowModel;
-import com.example.group11.model.UserModel;
 import com.example.group11.repository.user.FollowRepository;
 import com.example.group11.service.user.FollowService;
 import org.apache.dubbo.config.annotation.DubboService;
@@ -52,5 +51,18 @@ public class FollowServiceImpl extends BaseServiceImpl<FollowModel, Follow, Long
         };
         return followRepository.findAll(sepc, pageable).getContent().stream().map(Follow::getFollowingUserId)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<FollowModel> queryFollowModelByFollowingIdAndFollowedId(Long FollowingId, Long FollowedId) {
+        Specification<User> spec = (root, query, builder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            predicates.add(builder.equal(root.get("beFollowedUserId"), FollowedId));
+            predicates.add(builder.equal(root.get("followingUserId"), FollowingId));
+            return builder.and(predicates.toArray(new Predicate[predicates.size()]));
+        };
+
+        Pageable pageable = Pageable.unpaged();
+        return  this.findAll(spec, pageable).getContent();
     }
 }

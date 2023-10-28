@@ -8,4 +8,6 @@ import java.util.List;
 public interface FollowService extends BaseService<FollowModel, Long> {
 
     List<Long> queryFollowingIdByFollowedId(Long FollowedId);
+
+    List<FollowModel> queryFollowModelByFollowingIdAndFollowedId(Long FollowingId, Long FollowedId);
 }

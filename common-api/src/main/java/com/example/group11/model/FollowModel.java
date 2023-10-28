@@ -3,6 +3,7 @@ package com.example.group11.model;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -14,11 +15,11 @@ public class FollowModel implements Serializable {
 
     private Long beFollowedUserId;
 
-    private Long FollowingUserId;
+    private Long followingUserId;
 
     private Boolean deleted;
 
-    private Date createTime;
+    private LocalDateTime createTime;
 
     private String remark;
 

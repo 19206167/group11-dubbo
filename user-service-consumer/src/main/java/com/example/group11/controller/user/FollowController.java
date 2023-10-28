@@ -5,6 +5,7 @@ import com.example.group11.commons.utils.CheckUtil;
 import com.example.group11.commons.utils.JWTUtil;
 import com.example.group11.commons.utils.OrikaUtil;
 import com.example.group11.commons.utils.RestResult;
+import com.example.group11.entity.sql.User;
 import com.example.group11.model.FollowModel;
 import com.example.group11.model.UserModel;
 import com.example.group11.service.user.FollowService;
@@ -14,9 +15,13 @@ import com.example.group11.vo.query.UserQueryVO;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.criteria.Predicate;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -37,26 +42,41 @@ public class FollowController {
         Long userId = JWTUtil.getUserId(token);
         log.info("[queryMyFanList],userId={}", userId);
 
-        List<UserModel> userModelList = OrikaUtil.mapAsList(userService.queryFanListByUserId(userId, params), UserModel.class);
+        List<UserModel> userModelList = userService.queryFanListByUserId(userId, params);
         return RestResult.ok(OrikaUtil.mapAsList(userModelList, UserVO.class));
     }
 
     @GetMapping("/me/following-list")
     @ApiOperation(notes = "根据多条件查询当前登录用户的关注分页列表", value = "根据多条件查询当前登录用户的关注分页列表", tags = "关注管理")
     public RestResult<List<UserVO>> queryMyFollowingList(UserQueryVO params, HttpServletRequest httpServletRequest) {
-        return RestResult.ok();
+        String token = JWTUtil.getToken(httpServletRequest);
+        Long userId = JWTUtil.getUserId(token);
+        log.info("[queryMyFollowingList],userId={}", userId);
+
+        List<UserModel> userModelList = OrikaUtil.mapAsList(userService.queryFollowListByUserId(userId, params), UserModel.class);
+        return RestResult.ok(OrikaUtil.mapAsList(userModelList, UserVO.class));
     }
 
-    @GetMapping("/{id}/fan-list")
+    @GetMapping("/{uid}/fan-list")
     @ApiOperation(notes = "根据多条件查询目标用户的粉丝分页列表", value = "根据多条件查询目标用户的粉丝分页列表", tags = "关注管理")
-    public RestResult<List<UserVO>> queryUserFanList(@PathVariable Long id, UserQueryVO params, HttpServletRequest httpServletRequest) {
-        return RestResult.ok();
+    public RestResult<List<UserVO>> queryUserFanList(@PathVariable Long uid, UserQueryVO params, HttpServletRequest httpServletRequest) {
+        String token = JWTUtil.getToken(httpServletRequest);
+        Long userId = JWTUtil.getUserId(token);
+        log.info("[queryUserFanList],userId={}, queryUserId={}", uid, userId);
+
+        List<UserModel> userModelList = OrikaUtil.mapAsList(userService.queryFanListByUserId(uid, params), UserModel.class);
+        return RestResult.ok(OrikaUtil.mapAsList(userModelList, UserVO.class));
     }
 
-    @GetMapping("/{id}/following-list")
+    @GetMapping("/{uid}/following-list")
     @ApiOperation(notes = "根据多条件查询目标用户的关注分页列表", value = "根据多条件查询目标用户的关注分页列表", tags = "关注管理")
-    public RestResult<List<UserVO>> queryUserFollowingList(@PathVariable Long id, UserQueryVO params, HttpServletRequest httpServletRequest) {
-        return RestResult.ok();
+    public RestResult<List<UserVO>> queryUserFollowingList(@PathVariable Long uid, UserQueryVO params, HttpServletRequest httpServletRequest) {
+        String token = JWTUtil.getToken(httpServletRequest);
+        Long userId = JWTUtil.getUserId(token);
+        log.info("[queryUserFollowingList],userId={}, queryUserId={}", uid, userId);
+
+        List<UserModel> userModelList = OrikaUtil.mapAsList(userService.queryFollowListByUserId(uid, params), UserModel.class);
+        return RestResult.ok(OrikaUtil.mapAsList(userModelList, UserVO.class));
     }
 
     @PostMapping("/add/{followedUserId}")
@@ -64,8 +84,11 @@ public class FollowController {
     public RestResult<UserVO> addFollowingUser(@PathVariable Long followedUserId, HttpServletRequest httpServletRequest) {
         String token = JWTUtil.getToken(httpServletRequest);
         Long userId = JWTUtil.getUserId(token);
-        log.info("[addFollowing],followedUserId={},userId={}", followedUserId, userId);
+        log.info("[addFollowingUser],followedUserId={},userId={}", followedUserId, userId);
 
+        if(userId.equals(followedUserId)) {
+            return RestResult.fail("用户不能关注自己");
+        }
         UserModel userModel = userService.findById(followedUserId);
         if (CheckUtil.isEmpty(userModel)) {
             return RestResult.fail("目标用户不存在");
@@ -78,10 +101,43 @@ public class FollowController {
         return RestResult.ok(OrikaUtil.map(userModel, UserVO.class));
     }
 
-    @PostMapping("/cancel/{followedUserId}")
+    @PostMapping("/cancel/follow/{followedUserId}")
     @ApiOperation(notes = "取消关注目标用户", value = "取消关注目标用户", tags = "关注管理")
-    public RestResult<UserVO> cancelFollowingUser(@PathVariable Long followedUserId, HttpServletRequest httpServletRequest) {
+    public RestResult<Long> cancelFollowingUser(@PathVariable Long followedUserId, HttpServletRequest httpServletRequest) {
+        String token = JWTUtil.getToken(httpServletRequest);
+        Long userId = JWTUtil.getUserId(token);
+        log.info("[cancelFollowingUser],followedUserId={},userId={}", followedUserId, userId);
+
+        UserModel userModel = userService.findById(followedUserId);
+        if (CheckUtil.isEmpty(userModel)) {
+            return RestResult.fail("目标用户不存在");
+        }
+
+        List<FollowModel> followModelList = followService.queryFollowModelByFollowingIdAndFollowedId(userId, followedUserId);
+
+        if (CheckUtil.isNotEmpty(followModelList)) {
+            followService.deleteInBatch(followModelList);
+        }
         return RestResult.ok();
     }
 
+    @PostMapping("/cancel/fan/{followingUserId}")
+    @ApiOperation(notes = "将目标用户移除粉丝列表", value = "将目标用户移除粉丝列表", tags = "关注管理")
+    public RestResult<Long> cancelFanUser(@PathVariable Long followingUserId, HttpServletRequest httpServletRequest) {
+        String token = JWTUtil.getToken(httpServletRequest);
+        Long userId = JWTUtil.getUserId(token);
+        log.info("[cancelFanUser],followingUserId={},userId={}", followingUserId, userId);
+
+        UserModel userModel = userService.findById(followingUserId);
+        if (CheckUtil.isEmpty(userModel)) {
+            return RestResult.fail("目标用户不存在");
+        }
+
+
+        List<FollowModel> followModelList = followService.queryFollowModelByFollowingIdAndFollowedId(followingUserId, userId);
+        if(CheckUtil.isNotEmpty(followModelList)) {
+            followService.deleteInBatch(followModelList);
+        }
+        return RestResult.ok();
+    }
 }
