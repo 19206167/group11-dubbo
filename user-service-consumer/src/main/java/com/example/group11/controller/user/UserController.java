@@ -33,8 +33,7 @@ public class UserController {
 
     @PostMapping("/sys/user/login")
     @ApiOperation(notes = "用户登录获取token", value = "用户登录获取token", tags = "用户管理")
-    public RestResult login(@RequestParam("loginName") String loginName,
-                            @RequestParam("password") String password) {
+    public RestResult login(@RequestParam("loginName") String loginName, @RequestParam("password") String password) {
         UserModel userModel = userService.queryUserByLoginName(loginName);
         if (userModel.getPassword().equals(ShiroUtil.sha256(password, userModel.getSalt()))) {
             return RestResult.ok(JWTUtil.sign(userModel.getLoginName(), userModel.getId(), userModel.getRole()));
@@ -68,11 +67,9 @@ public class UserController {
     }
 
     @PostMapping("/sys/user/me/respondent")
-    @ApiOperation(notes = "成为答主,调用该接口前，首先调用统一文件上传接口上传语音自我介绍文件，并得到返回的语音自我介绍url",
-            value = "成为答主", tags = "用户管理")
+    @ApiOperation(notes = "成为答主,调用该接口前，首先调用统一文件上传接口上传语音自我介绍文件，并得到返回的语音自我介绍url", value = "成为答主", tags = "用户管理")
 //首先调用统一文件上传接口上传语音自我介绍文件，并得到返回的语音自我介绍url
-    public RestResult<UserVO> toRespondent(@RequestBody UserToRespondentVO userToRespondentVO,
-                                           HttpServletRequest httpServletRequest) {
+    public RestResult<UserVO> toRespondent(@RequestBody UserToRespondentVO userToRespondentVO, HttpServletRequest httpServletRequest) {
         String token = JWTUtil.getToken(httpServletRequest);
         Long userId = JWTUtil.getUserId(token);
         log.info("[toRespondent],userId={}", userId);
@@ -92,15 +89,22 @@ public class UserController {
 
 
     @PostMapping("/exapi/sys/user/id")
-    @ApiOperation(notes = "提交新注册用户信息，调用该接口前，首先调用统一文件上传接口上传用户头像文件，并得到返回的用户头像url",
-            value = "提交新注册用户信息", tags = "用户管理")
+    @ApiOperation(notes = "提交新注册用户信息，调用该接口前，首先调用统一文件上传接口上传用户头像文件，并得到返回的用户头像url", value = "提交新注册用户信息", tags = "用户管理")
     //首先调用统一文件上传接口上传用户头像文件，并得到返回的用户头像url
-    public RestResult<UserVO> insertUser(@RequestBody UserModel form) {
+    public RestResult<UserVO> insertUser(@RequestBody UserVO form) {
         log.info("[insertUser],form={}", form);
+        if (CheckUtil.isEmpty(form.getLoginName()) || CheckUtil.isEmpty(form.getUserName()) ||
+                CheckUtil.isEmpty(form.getPassword())) {
+            return RestResult.fail("请填写登录名，用户名和密码");
+        }
+        if (CheckUtil.isNotEmpty(userService.queryUserIdByLoginName(form.getLoginName()))) {
+            return RestResult.fail("该loginName已存在");
+        }
         String salt = RandomStringUtils.randomAlphanumeric(20);
         form.setSalt(salt);
         form.setPassword(ShiroUtil.sha256(form.getPassword(), salt));
-        Long id = userService.insertOne(form);
+        UserModel model = OrikaUtil.map(form, UserModel.class);
+        Long id = userService.insertOne(model);
         UserModel userModel = userService.findById(id);
 
         UserES userES = OrikaUtil.map(userModel, UserES.class);
@@ -110,16 +114,24 @@ public class UserController {
 
     @PutMapping("/sys/user/id/")
     @ApiOperation(notes = "用户修改自己的信息", value = "用户修改自己的信息", tags = "用户管理")
-    public RestResult<UserVO> updateUserById(@RequestBody UserModel form,
-                                             HttpServletRequest httpServletRequest) {
+    public RestResult<UserVO> updateUserById(@RequestBody UserVO form, HttpServletRequest httpServletRequest) {
         String token = JWTUtil.getToken(httpServletRequest);
         Long userId = JWTUtil.getUserId(token);
         log.info("[updateUserById],form={},userId={}", form, userId);
+        if (CheckUtil.isEmpty(form.getLoginName()) || CheckUtil.isEmpty(form.getUserName()) ||
+                CheckUtil.isEmpty(form.getPassword())) {
+            return RestResult.fail("请填写登录名，用户名和密码");
+        }
+        if (CheckUtil.isNotEmpty(userService.queryUserIdByLoginName(form.getLoginName())) &&
+                !form.getLoginName().equals(userService.findById(userId).getLoginName())) {
+            return RestResult.fail("该loginName已存在");
+        }
         form.setId(userId);
         String salt = RandomStringUtils.randomAlphanumeric(20);
         form.setSalt(salt);
         form.setPassword(ShiroUtil.sha256(form.getPassword(), salt));
-        userService.updateById(form);
+        UserModel model = OrikaUtil.map(form, UserModel.class);
+        userService.updateById(model);
         UserModel userModel = userService.findById(userId);
 
         UserES userES = OrikaUtil.map(userModel, UserES.class);

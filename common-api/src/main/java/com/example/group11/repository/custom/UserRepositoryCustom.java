@@ -10,5 +10,7 @@ public interface UserRepositoryCustom {
 
     List<User> queryFanListByUserId(Long userId, UserQueryVO params);
 
+    List<User> queryFollowListByUserId(Long userId, UserQueryVO params);
+
 }
 
