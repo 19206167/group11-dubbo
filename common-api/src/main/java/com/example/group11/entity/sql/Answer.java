@@ -32,6 +32,8 @@ public class Answer implements BaseEntity<Integer>, Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    private Long userId;
+
     private Integer questionId;
 
     private String content;

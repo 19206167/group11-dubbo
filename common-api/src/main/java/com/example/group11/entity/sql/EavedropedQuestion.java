@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 @DynamicUpdate
 @DynamicInsert
 @Data
-@Table(name = "eavedroped_question")
+@Table(name = "eavesdroped_question")
 public class EavedropedQuestion implements BaseEntity<Integer>, Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -34,8 +34,6 @@ public class EavedropedQuestion implements BaseEntity<Integer>, Serializable {
 
     private Integer questionId;
 
-    private String content;
-
     private Integer transactionId;
 
     private LocalDateTime createTime;
@@ -43,5 +41,14 @@ public class EavedropedQuestion implements BaseEntity<Integer>, Serializable {
     private String remark;
 
     private Boolean deleted;
+
+
+    public EavedropedQuestion() {}
+
+    public EavedropedQuestion(Long userId, Integer questionId, Integer transactionId) {
+        this.userId = userId;
+        this.questionId = questionId;
+        this.transactionId = transactionId;
+    }
 }
 

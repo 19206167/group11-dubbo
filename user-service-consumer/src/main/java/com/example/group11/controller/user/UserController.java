@@ -28,7 +28,7 @@ public class UserController {
     @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.user.UserService.class)
     private UserService userService;
 
-    @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.search.SearchService.class)
+    @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.search.SearchService.class, check = false)
     private SearchService searchService;
 
     @PostMapping("/sys/user/login")

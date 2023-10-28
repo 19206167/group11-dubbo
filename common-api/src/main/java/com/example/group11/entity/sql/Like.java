@@ -39,5 +39,10 @@ public class Like implements BaseEntity<Integer>, Serializable {
     private LocalDateTime createTime;
 
     private String remark;
+
+    public Like(Long userId, Integer questionId) {
+        this.userId = userId;
+        this.questionId = questionId;
+    }
 }
 

@@ -42,4 +42,10 @@ public class Comment implements BaseEntity<Integer>, Serializable {
     private LocalDateTime createTime;
 
     private String remark;
+
+    public Comment(Long userId, Integer questionId, String content) {
+        this.userId  = userId;
+        this.questionId = questionId;
+        this.content = content;
+    }
 }
