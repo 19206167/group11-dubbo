@@ -43,7 +43,7 @@ public class SearchServiceImpl implements SearchService {
     private UserESRepository userESRepository;
 
     @Autowired
-    private QaESRepository QuestionAndAnswerESRepository;
+    private QaESRepository qaESRepository;
 
     @Autowired
     private ElasticsearchRestTemplate elasticsearchRestTemplate;
@@ -56,7 +56,7 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public Boolean saveQa(QaES... qaES) {
-        QuestionAndAnswerESRepository.saveAll(Arrays.asList(qaES));
+        qaESRepository.saveAll(Arrays.asList(qaES));
         return true;
     }
 
@@ -70,6 +70,14 @@ public class SearchServiceImpl implements SearchService {
         userESRepository.deleteById(id);
         return null;
     }
+
+    @Override
+    public Boolean deleteQa(String id) {
+        qaESRepository.deleteById(id);
+        return null;
+    }
+
+
 
     @Override
     public UserES getUserById(String id) {

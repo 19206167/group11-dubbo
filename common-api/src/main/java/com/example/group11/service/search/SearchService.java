@@ -26,6 +26,8 @@ public interface SearchService {
 
     Boolean deleteUser(String id);
 
+    Boolean deleteQa(String id);
+
     UserES getUserById(String id);
 
     List<UserES> getAllUser();

@@ -2,6 +2,7 @@ package com.example.group11.shiro;
 
 import com.alibaba.fastjson.JSON;
 
+import com.example.group11.commons.utils.CheckUtil;
 import com.example.group11.commons.utils.ErrorCode;
 import com.example.group11.commons.utils.JWTUtil;
 import com.example.group11.commons.utils.RestResult;
@@ -38,7 +39,7 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
     @Override
     protected boolean isLoginAttempt(ServletRequest request, ServletResponse response) {
         HttpServletRequest req = (HttpServletRequest) request;
-        String authorization = req.getHeader("Authorization");
+        String authorization = CheckUtil.isNotEmpty(req.getHeader("Authorization")) ? req.getHeader("Authorization") : req.getParameter("Authorization");
         return authorization != null;
     }
 
