@@ -19,6 +19,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @EnableDubbo
 public class UserProviderApplication {
     public static void main(String[] args) {
+        //update using
         SpringApplication.run(UserProviderApplication.class, args);
     }
 }

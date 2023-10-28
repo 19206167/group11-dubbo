@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification-service-provider
+  labels:
+    app: notification-service-provider
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notification-service-provider
+  template:
+    metadata:
+      labels:
+        app: notification-service-provider    
+    spec:
+      containers:
+      - name: notification-service-provider
+        image: 172.30.229.165/group11-dubbo-node2/notification-service-provider:imageVersion
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: notification-service-provider
+  name: notification-service-provider  
+spec:
+  selector:
+    app: notification-service-provider
+  ports:
+  - port: 8504
+    targetPort: 8504

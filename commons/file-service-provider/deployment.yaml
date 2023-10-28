@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: file-service-provider
+  labels:
+    app: file-service-provider
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: file-service-provider
+  template:
+    metadata:
+      labels:
+        app: file-service-provider    
+    spec:
+      containers:
+      - name: file-service-provider
+        image: 172.30.229.165/group11-dubbo-node2/file-service-provider:imageVersion
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: file-service-provider
+  name: file-service-provider
+spec:
+  selector:
+    app: file-service-provider
+  ports:
+  - port: 8506
+    targetPort: 8506
