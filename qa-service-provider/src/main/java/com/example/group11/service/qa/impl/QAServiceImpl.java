@@ -142,7 +142,7 @@ public class QAServiceImpl extends BaseServiceImpl<QuestionModel, Question, Inte
 
 //    根据问题id查到对应的答案
     @Override
-    public AnswerModel getAnswerByQuestionId(Integer questionId) {
+    public Answer getAnswerByQuestionId(Integer questionId) {
         return answerRepository.findByQuestionId(questionId);
     }
 
@@ -154,7 +154,7 @@ public class QAServiceImpl extends BaseServiceImpl<QuestionModel, Question, Inte
      * @return: void
      **/
     @Override
-    public AnswerModel answerQuestion(AnswerModel answerModel) throws Group11Exception{
+    public Answer answerQuestion(AnswerModel answerModel) throws Group11Exception{
 
         Optional<Question> question = questionRepository.findById(answerModel.getQuestionId());
         Answer answer;
@@ -173,11 +173,11 @@ public class QAServiceImpl extends BaseServiceImpl<QuestionModel, Question, Inte
         } else {
             throw new Group11Exception(ErrorCode.EMPTY_RESULT);
         }
-        return OrikaUtil.map(answer, AnswerModel.class);
+        return answer;
     }
 
     @Override
-    public AnswerModel updateTextQuestionAnswer(Long userId, Integer answerId, List<String> url, String answerContent) {
+    public Answer updateTextQuestionAnswer(Long userId, Integer answerId, List<String> url, String answerContent) {
         Optional<Answer> answer = answerRepository.findById(answerId);
 
         if (answer.isPresent()) {
@@ -190,13 +190,13 @@ public class QAServiceImpl extends BaseServiceImpl<QuestionModel, Question, Inte
         } else {
             throw new Group11Exception(ErrorCode.EMPTY_RESULT);
         }
-        return OrikaUtil.map(answer.get(), AnswerModel.class);
+        return answer.get();
     }
 
 
     @Override
-    public AnswerModel findAnswerModelById(Integer answerId) {
-        return OrikaUtil.map(answerRepository.findById(answerId), AnswerModel.class);
+    public Answer findAnswerModelById(Integer answerId) {
+        return answerRepository.findById(answerId).get();
     }
 
     @Override

@@ -13,5 +13,5 @@ import com.example.group11.model.AnswerModel;
  * @Date 2023/10/14 21:27
  */
 public interface AnswerRepository extends BaseRepository<Answer, Integer> {
-    AnswerModel findByQuestionId(Integer questionId);
+    Answer findByQuestionId(Integer questionId);
 }

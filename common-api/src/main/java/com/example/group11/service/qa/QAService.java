@@ -1,6 +1,7 @@
 package com.example.group11.service.qa;
 
 import com.example.group11.commons.utils.BaseService;
+import com.example.group11.entity.sql.Answer;
 import com.example.group11.entity.sql.Comment;
 import com.example.group11.entity.sql.Question;
 import com.example.group11.model.AnswerModel;
@@ -31,7 +32,7 @@ public interface QAService extends BaseService<QuestionModel, Integer> {
     Page<QuestionModel> getUserQuestionsByPage(QuestionQueryVO questionQueryVO);
 
 //    根据问题Id获取答案
-    AnswerModel getAnswerByQuestionId(Integer questionId);
+    Answer getAnswerByQuestionId(Integer questionId);
 
 //    文字回答问题
 //    void answerQuestionText(Long responderId, Integer questionId, String answerContent);
@@ -39,13 +40,13 @@ public interface QAService extends BaseService<QuestionModel, Integer> {
 //    语音回答问题, 也可以添加文字描述
 //    需要先经过file Module得到url
 //    type0 是语音回答，1 是文字回答
-    AnswerModel answerQuestion(AnswerModel answerModel);
+    Answer answerQuestion(AnswerModel answerModel);
 
 //    修改文字回答问题 answerId及 回答者id
-    AnswerModel updateTextQuestionAnswer(Long userId, Integer answerId, List<String> url, String answerContent);
+    Answer updateTextQuestionAnswer(Long userId, Integer answerId, List<String> url, String answerContent);
 
 //    根据答案id查询答案
-    AnswerModel findAnswerModelById(Integer answerId);
+    Answer findAnswerModelById(Integer answerId);
 
 //    判断用户能否直接得到问题答案
     boolean checkWhetherGetAnswer(Long userId, Integer questionId);
