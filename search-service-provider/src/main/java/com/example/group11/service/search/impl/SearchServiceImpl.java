@@ -62,7 +62,7 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public Optional<QaES> getQaById(String id) {
-        return QuestionAndAnswerESRepository.findById(id);
+        return qaESRepository.findById(id);
     }
 
     @Override

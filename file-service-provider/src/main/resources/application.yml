@@ -12,9 +12,11 @@ spring:
   servlet:
     multipart:
       enabled: true
-      file-size-threshold: 0
+      file-size-threshold: 10000
       max-file-size: 2048MB
       max-request-size: 2048MB
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
 
 # 服务运行端口
 server:

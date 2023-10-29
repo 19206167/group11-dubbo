@@ -41,18 +41,22 @@ public class AnswerController {
     private SearchService searchService;
 
 
-    @GetMapping("/{questionId}")
-    @ApiOperation(notes = "得到答案", value = "得到答案", tags = "问题管理")
-    public RestResult<AnswerModel> getAnswerByQuestionId(@PathVariable Integer questionId, HttpServletRequest httpServletRequest) {
+    @GetMapping("/questionId/{questionId}")
+    @ApiOperation(notes = "得到答案（已测试）", value = "得到答案", tags = "问题管理")
+    public RestResult<Answer> getAnswerByQuestionId(@PathVariable Integer questionId, HttpServletRequest httpServletRequest) {
         // 获取当前用户id
         String token = JWTUtil.getToken(httpServletRequest);
         Long userId = JWTUtil.getUserId(token);
+
+        log.info(userId.toString());
+        log.info(questionId.toString());
 
 //        判断该问题答案能否被此用户获得
         boolean get = qaService.checkWhetherGetAnswer(userId, questionId);
 
         if (get) {
-            AnswerModel answer = qaService.getAnswerByQuestionId(questionId);
+            Answer answer = qaService.getAnswerByQuestionId(questionId);
+            log.info(answer.toString());
             return RestResult.ok(answer);
         } else {
             return RestResult.fail("您需要购买此问题的答案。");
@@ -60,9 +64,9 @@ public class AnswerController {
     }
 
 
-    @GetMapping("/{answerId}")
-    @ApiOperation(notes = "查找文字回答", value = "查找文字回答", tags = "问题管理")
-    public RestResult<AnswerModel> getAnswerByAnswerId(@PathVariable Integer answerId){
+    @GetMapping("/answerId/{answerId}")
+    @ApiOperation(notes = "查找文字回答（已测试）", value = "查找文字回答", tags = "问题管理")
+    public RestResult<Answer> getAnswerByAnswerId(@PathVariable Integer answerId){
         return RestResult.ok(qaService.findAnswerModelById(answerId));
     }
 
@@ -98,7 +102,7 @@ public class AnswerController {
     }
 
     @PostMapping("/text/{questionId}")
-    @ApiOperation(notes = "文字回答问题", value = "文字回答问题", tags = "问题管理")
+    @ApiOperation(notes = "文字回答问题（已测试）", value = "文字回答问题", tags = "问题管理")
     public RestResult<QuestionVO> answerQuestionText(@PathVariable Integer questionId, @RequestBody AnswerVO answerVO,
                                                  HttpServletRequest httpServletRequest) {
         // 获取当前用户id
@@ -129,8 +133,8 @@ public class AnswerController {
     }
 
     @PutMapping("/text/update/{questionId}")
-    @ApiOperation(notes = "更新文字回答", value = "更新文字回答", tags = "问题管理")
-    public RestResult<AnswerModel> updateTextQuestionAnswer(@PathVariable Integer questionId, @RequestBody AnswerVO answerVO,
+    @ApiOperation(notes = "更新文字回答（已测试）", value = "更新文字回答", tags = "问题管理")
+    public RestResult<Answer> updateTextQuestionAnswer(@PathVariable Integer questionId, @RequestBody AnswerVO answerVO,
                                                        HttpServletRequest httpServletRequest) {
         // 获取当前用户id
         String token = JWTUtil.getToken(httpServletRequest);
@@ -141,7 +145,7 @@ public class AnswerController {
         String answerContent = answerVO.getAnswerContent();
 
 //        更新文字回答
-        AnswerModel answerModel = qaService.updateTextQuestionAnswer(userId, questionId, answerVO.getUrl(), answerContent);
+        Answer answer = qaService.updateTextQuestionAnswer(userId, questionId, answerVO.getUrl(), answerContent);
 
 //        更新qs中的数据
         QaES qaES = searchService.getQaById(questionId.toString()).get();
@@ -151,12 +155,10 @@ public class AnswerController {
         searchService.saveQa(qaES);
 
 //        返回更新的answer
-        return RestResult.ok(answerModel);
+        return RestResult.ok(answer);
     }
 
-
-
-    private void add(QuestionModel questionModel, AnswerModel answerModel){
+    private void add(QuestionModel questionModel, AnswerModel answerModel) {
         questionModel.setAnswerId(qaService.answerQuestion(answerModel).getId());
         qaService.updateById(questionModel);
 //                        将问题添加到回es中
