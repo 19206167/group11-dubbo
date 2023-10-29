@@ -22,7 +22,7 @@ public interface SearchService {
 
     Boolean saveQa(QaES... qaES);
 
-    Optional<QaES> getQaById(String id);
+    QaES getQaById(String id);
 
     Boolean deleteUser(String id);
 

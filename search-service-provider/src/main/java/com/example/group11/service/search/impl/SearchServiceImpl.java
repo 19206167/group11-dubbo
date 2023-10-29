@@ -61,8 +61,9 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public Optional<QaES> getQaById(String id) {
-        return qaESRepository.findById(id);
+    public QaES getQaById(String id) {
+        Optional<QaES> byId = qaESRepository.findById(id);
+        return byId.orElse(null);
     }
 
     @Override

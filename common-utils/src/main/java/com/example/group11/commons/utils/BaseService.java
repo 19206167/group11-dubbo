@@ -11,11 +11,11 @@ public interface BaseService<MType, IdType> {
 
     MType findById(IdType id);
 
-    public Page<MType> findAll(Specification specification, Pageable pageable);
+    Page<MType> findAll(Specification specification, Pageable pageable);
 
-    public List<MType> findAll();
+    List<MType> findAll();
 
-    public List<MType> findAllById(Iterable<IdType> ids);
+    List<MType> findAllById(Iterable<IdType> ids);
 
     Page<MType> findPageByExample(MType example, Pageable pageable);
 
@@ -25,13 +25,13 @@ public interface BaseService<MType, IdType> {
 
     List<IdType> insertInBatch(Collection<MType> models) throws Group11Exception;
 
-    public void deleteById(MType model);
+    void deleteById(MType model);
 
-    public void deleteInBatch(Collection<MType> models) throws Group11Exception;
+    void deleteInBatch(Collection<MType> models) throws Group11Exception;
 
     void updateById(MType model) throws Group11Exception;
 
-    public void updateInBatch(Collection<MType> models) throws Group11Exception;
+    void updateInBatch(Collection<MType> models) throws Group11Exception;
 
     long deleteLogicallyByIds(Collection<IdType> ids, String updateBy) throws Group11Exception;
 

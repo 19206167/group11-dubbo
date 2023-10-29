@@ -17,6 +17,9 @@ public interface UserService extends BaseService<UserModel, Long> {
 
     List<UserModel> queryFanListByUserId(Long userId, UserQueryVO params);
 
+    List<UserModel> queryFollowListByUserId(Long userId, UserQueryVO params);
+
     Page<UserModel> queryUserListByPage(UserQueryVO params);
+
 
 }
