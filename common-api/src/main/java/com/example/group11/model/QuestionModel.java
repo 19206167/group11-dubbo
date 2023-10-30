@@ -35,6 +35,8 @@ public class QuestionModel implements Serializable {
 
     private Boolean paid;
 
+    private String category;
+
     private Integer answerId;
 
     private Integer commentNum;
