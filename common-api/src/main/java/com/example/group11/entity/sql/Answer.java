@@ -1,14 +1,17 @@
 package com.example.group11.entity.sql;
 
 import com.example.group11.commons.utils.BaseEntity;
+import com.vladmihalcea.hibernate.type.json.JsonStringType;
 import lombok.Data;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.mapping.List;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * FileName: Answer.java
@@ -24,6 +27,8 @@ import java.time.LocalDateTime;
 @DynamicInsert
 @Data
 @Table(name = "answer")
+// handle json类型数据
+@TypeDef(name="json",typeClass = JsonStringType.class)
 public class Answer implements BaseEntity<Integer>, Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -41,7 +46,9 @@ public class Answer implements BaseEntity<Integer>, Serializable {
 //    0表示文字回答，1表示语音回答
     private Integer type;
 
-    private List url;
+    @Type(type = "json")
+    @Column(name = "url", columnDefinition = "json")
+    private List<String> url;
 
     private Boolean deleted;
 
@@ -49,10 +56,9 @@ public class Answer implements BaseEntity<Integer>, Serializable {
 
     private String remark;
 
-    public Answer() {
-    }
+    public Answer() {}
 
-    public Answer(Integer questionId, String content, Integer type, List url) {
+    public Answer(Integer questionId, String content, Integer type, List<String> url) {
         this.questionId = questionId;
         this.content = content;
         this.type = type;

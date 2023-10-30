@@ -2,13 +2,20 @@ spring:
   application:
     #    服务名称
     name:
-      file-service-consumer
+      qa-service-consumer
+  datasource:
+    url: jdbc:mysql://group11-database-do-user-14640959-0.b.db.ondigitalocean.com:25060/defaultdb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=true
+    username: doadmin
+    password: AVNS_UeUmefIueMk-xarcAHd
+    driver-class-name: com.mysql.cj.jdbc.Driver
   servlet:
     multipart:
       enabled: true
-      file-size-threshold: 0
+      file-size-threshold: 10000
       max-file-size: 2048MB
       max-request-size: 2048MB
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
 
 # 服务运行端口
 server:

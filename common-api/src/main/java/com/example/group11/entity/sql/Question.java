@@ -9,7 +9,6 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
  * FileName: Question.java
@@ -43,6 +42,8 @@ public class Question implements BaseEntity<Integer>, Serializable {
 
     private Boolean paid;
 
+    private String category;
+
     private Integer answerId;
 
     private Integer commentNum;
@@ -55,7 +56,7 @@ public class Question implements BaseEntity<Integer>, Serializable {
 
     private String remark;
 
-    public Question(Long askerId, Long responderId, String content, BigDecimal reward, Boolean paid, Integer answerId, Integer commentNum, Integer likeNum) {
+    public Question(Long askerId, Long responderId, String content, BigDecimal reward, Boolean paid, String category, Integer answerId, Integer commentNum, Integer likeNum) {
         this.askerId = askerId;
         this.responderId = responderId;
         this.content = content;
