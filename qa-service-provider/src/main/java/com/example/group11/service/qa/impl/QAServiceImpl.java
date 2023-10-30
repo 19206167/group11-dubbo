@@ -114,6 +114,13 @@ public class QAServiceImpl extends BaseServiceImpl<QuestionModel, Question, Inte
         }
     }
 
+    @Override
+    public QuestionModel queryQuestionById(int questionId){
+        Question question = questionRepository.findById(questionId);
+        return mapBean(question, QuestionModel.class);
+    }
+
+
     /*
      * @description: 根据提问者id查询问题列表并返回
      * @author: liuzijian

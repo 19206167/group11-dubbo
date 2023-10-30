@@ -27,6 +27,10 @@ public interface QAService extends BaseService<QuestionModel, Integer> {
 //    删除问题
     boolean deleteQuestion(Long userId, Integer questionId);
 
+//  按id查找问题
+    QuestionModel queryQuestionById(int questionId);
+
+
 //    查看用户问题列表
     Page<QuestionModel> getUserQuestionsByPage(QuestionQueryVO questionQueryVO);
 

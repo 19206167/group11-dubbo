@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification-service-consumer
+  labels:
+    app: notification-service-consumer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notification-service-consumer
+  template:
+    metadata:
+      labels:
+        app: notification-service-consumer    
+    spec:
+      containers:
+      - name: notification-service-consumer
+        image: 172.30.229.165/group11-dubbo-node2/notification-service-consumer:imageVersion
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: notification-service-consumer
+  name: notification-service-consumer  
+spec:
+  selector:
+    app: notification-service-consumer
+  ports:
+  - port: 8604
+    targetPort: 8604

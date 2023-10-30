@@ -14,5 +14,5 @@ import com.example.group11.repository.custom.QuestionRepositoryCustom;
  * @Date 2023/10/14 21:27
  */
 public interface QuestionRepository extends BaseRepository<Question, Integer> {
-
+    Question findById(int questionId);
 }
