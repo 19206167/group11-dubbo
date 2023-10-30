@@ -1,0 +1,23 @@
+# 使用官方Java 1.8基础镜像
+FROM maven:3.9.2-amazoncorretto-8
+
+# 维护者信息
+LABEL maintainer="your.email@example.com"
+
+# 创建一个目录来持久化应用的数据
+VOLUME /tmp
+
+# 暴露应用使用的端口，例如8080
+EXPOSE 8603
+
+# 添加一个工作目录
+WORKDIR /app
+
+# 复制构建输出的 JAR 文档到镜像中
+COPY target/*.jar app.jar
+
+# 配置容器启动后执行的命令
+ENTRYPOINT ["java","-jar","/app/app.jar"]
+
+# 指定容器启动时要运行的命令
+# ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/workspace/consumer/target/qa-service-consumer-1.0-SNAPSHOT.jar"]
