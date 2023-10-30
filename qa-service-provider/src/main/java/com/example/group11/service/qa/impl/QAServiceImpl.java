@@ -80,7 +80,7 @@ public class QAServiceImpl extends BaseServiceImpl<QuestionModel, Question, Inte
         Optional<User> user = userRepository.findById(responderId);
 
         if(user.isPresent()) {
-            //        检测被提问者是否是回答者
+            // 检测被提问者是否是回答者
             if (user.get().getRole() != 1) {
                 throw new Group11Exception(ErrorCode.USER_ROLE_ERROR, "被提问者不是写作者，提问者只能向写作者提问。");
             }
