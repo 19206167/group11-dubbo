@@ -7,7 +7,6 @@ import com.example.group11.entity.sql.Question;
 import com.example.group11.model.AnswerModel;
 import com.example.group11.model.QuestionModel;
 import com.example.group11.vo.query.QuestionQueryVO;
-import io.swagger.models.auth.In;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -86,6 +85,8 @@ public interface QAService extends BaseService<QuestionModel, Integer> {
 
 //    获取某个问题的所有评论
     Page<Comment> getCommentByQuestionByPage(Integer questionId, Integer pageNo, Integer pageSize);
+
+    Page<Question> queryAllQuestionByCategory(String category, Integer pageNo, Integer pageSize);
 
 //    Integer insertAnswer(AnswerModel answerModel);
 }

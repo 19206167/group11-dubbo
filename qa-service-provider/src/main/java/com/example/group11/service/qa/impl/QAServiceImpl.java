@@ -371,6 +371,23 @@ public class QAServiceImpl extends BaseServiceImpl<QuestionModel, Question, Inte
         return commentRepository.findAll(spec, pageable);
     }
 
+    @Override
+    public Page<Question> queryAllQuestionByCategory(String category, Integer pageNo, Integer pageSize) {
+        pageNo = CheckUtil.isNotEmpty(pageNo) ? pageNo : PageEnum.DEFAULT_PAGE_NO.getKey();
+        pageSize = CheckUtil.isNotEmpty(pageSize) ? pageSize : PageEnum.DEFAULT_PAGE_SIZE.getKey();
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+
+        Specification<Question> spec = (root, query, builder) -> {
+            Predicate predicate = builder.conjunction();
+            if (!category.equals("All")){
+                predicate = builder.equal(root.get("category"), category);
+            }
+            return predicate;
+        };
+        return questionRepository.findAll(spec, pageable);
+    }
+
 //    @Override
 //    public Integer insertAnswer(AnswerModel answerModel) {
 //        Answer answer = OrikaUtil.map(answerModel, Answer.class);

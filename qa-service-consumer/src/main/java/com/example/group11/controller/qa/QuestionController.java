@@ -12,6 +12,7 @@ import com.example.group11.service.user.FollowService;
 import com.example.group11.vo.QuestionVO;
 import com.example.group11.vo.query.QuestionQueryVO;
 import com.example.group11.websocket.WebSocketServer;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
@@ -48,8 +49,7 @@ public class QuestionController {
 
     @GetMapping("/all/{userId}")
     @ApiOperation(notes = "查询用户全部问题(已测试)", value = "查询用户全部问题", tags = "问题管理")
-    public RestResult<Page<QuestionModel>> queryAllQuestionList(@PathVariable Long userId, Integer pageNo, Integer pageSize,
-                                                                HttpServletRequest httpServletRequest) {
+    public RestResult<Page<QuestionModel>> queryAllQuestionList(@PathVariable Long userId, Integer pageNo, Integer pageSize) {
 
         QuestionQueryVO questionQueryVO = new QuestionQueryVO();
         questionQueryVO.setAskerId(userId);
@@ -66,6 +66,12 @@ public class QuestionController {
 //
 //        return RestResult.ok();
 //    }
+
+    @GetMapping("/all/{category}")
+    @ApiOperation(notes = "根据类型获取问题，如果获取全部问题，category为all", value = "根据类型获取问", tags = "问题管理")
+    public RestResult<Page<Question>> queryAllQuestionByCategory(@PathVariable String category, Integer pageNo, Integer pageSize){
+        return RestResult.ok(qaService.queryAllQuestionByCategory(category, pageNo, pageSize));
+    }
 
     @GetMapping("/hot/question-list")
     @ApiOperation(notes = "首页热门回答列表（还没有想好按照哪种方式判断热门回答）", value = "首页热门回答列表", tags = "问题管理")
@@ -112,8 +118,6 @@ public class QuestionController {
         String token = JWTUtil.getToken(httpServletRequest);
         Long userId = JWTUtil.getUserId(token);
 
-        userId = 3L;
-
         return RestResult.ok(qaService.checkUnansweredQuestionByResponderIdByPage(userId, pageNo, pageSize));
     }
 
@@ -156,11 +160,12 @@ public class QuestionController {
     }
 
 
-    @PostMapping("/{responderId}/{content}/{reward:.+}")
+    @PostMapping("/{responderId}/{content}/{reward:.+}/{category}")
     @ApiOperation(notes = "提问问题，首先创建问题，然后再进行支付（已测试）", value = "提问问题", tags = "问题管理")
 //    还没有支付
     public RestResult<Map<String, Question>> askQuestion(@PathVariable Long responderId, @PathVariable String content,
-                                                         @PathVariable Double reward, HttpServletRequest httpServletRequest) {
+                                                         @PathVariable Double reward, @PathVariable String category,
+                                                         HttpServletRequest httpServletRequest) {
         // 获取当前用户id
         String token = JWTUtil.getToken(httpServletRequest);
         Long userId = JWTUtil.getUserId(token);
@@ -172,13 +177,15 @@ public class QuestionController {
             log.info(String.valueOf(reward));
             BigDecimal price = BigDecimal.valueOf(reward);
             log.info(String.valueOf(price));
-            Question question = new Question(userId, responderId, content, price, false, -1, 0, 0);
+            Question question = new Question(userId, responderId, content, price, false, category, -1, 0, 0);
             log.info(String.valueOf(question.getReward()));
+
             try {
                 qaService.createQuestion(question);
             } catch (Exception e) {
                 return RestResult.fail(e.getMessage());
             }
+
             sendPrompt(userId, responderId);
             Map<String, Question> questionMap = new HashMap<>();
             questionMap.put("question", question);

@@ -75,18 +75,21 @@ public class FileController {
 
 
         log.info(suffix);
+        String url;
         if (suffix.equals("jpg") || suffix.equals("jpeg") || suffix.equals("png")) {
             String tmp = "group11/image/" + fileName;
             log.info(tmp);
-            return RestResult.ok(fileService.uploadPicture("group11", tmp, local));
+            url = fileService.uploadPicture("group11", tmp, local);
         } else if (suffix.equals("mp3")) {
             String tmp = "group11/image/" + fileName;
             log.info(tmp);
-            return RestResult.ok(fileService.uploadAudio("group11", tmp, local));
+            url = fileService.uploadAudio("group11", tmp, local);
         } else {
+            local.delete();
             return RestResult.fail("错误的文件类型");
         }
-
+        local.delete();
+        return RestResult.ok(url);
     }
 
     /**
