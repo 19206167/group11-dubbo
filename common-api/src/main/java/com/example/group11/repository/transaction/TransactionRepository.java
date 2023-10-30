@@ -2,6 +2,8 @@ package com.example.group11.repository.transaction;
 
 import com.example.group11.commons.utils.BaseRepository;
 import com.example.group11.entity.sql.Transaction;
+import com.example.group11.model.TransactionModel;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * FileName: TransactionRepository.java
@@ -13,4 +15,5 @@ import com.example.group11.entity.sql.Transaction;
  */
 //
 public interface TransactionRepository extends BaseRepository<Transaction, Long> {
+    Transaction findByIdAndDeleted(long transactionId, Boolean deleted);
 }

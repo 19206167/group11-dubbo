@@ -1,5 +1,7 @@
 package com.example.group11.service.transaction;
 
+import com.example.group11.model.TransactionModel;
+
 /**
  * FileName: PaymentService.java
  *
@@ -9,4 +11,5 @@ package com.example.group11.service.transaction;
  * @Date 2023/10/14 17:47
  */
 public interface TransactionService {
+    TransactionModel queryTransactionByQuestionId(long transactionId);
 }

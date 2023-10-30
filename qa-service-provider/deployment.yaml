@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: qa-service-provider
+  labels:
+    app: qa-service-provider
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: qa-service-provider
+  template:
+    metadata:
+      labels:
+        app: qa-service-provider    
+    spec:
+      containers:
+      - name: qa-service-provider
+        image: 172.30.229.165/group11-dubbo-node2/qa-service-provider:imageVersion
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: qa-service-provider
+  name: qa-service-provider  
+spec:
+  selector:
+    app: qa-service-provider
+  ports:
+  - port: 8503
+    targetPort: 8503

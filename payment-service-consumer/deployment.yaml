@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-service-consumer
+  labels:
+    app: payment-service-consumer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payment-service-consumer
+  template:
+    metadata:
+      labels:
+        app: payment-service-consumer    
+    spec:
+      containers:
+      - name: payment-service-consumer
+        image: 172.30.229.165/group11-dubbo-node2/payment-service-consumer:imageVersion
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: payment-service-consumer
+  name: payment-service-consumer  
+spec:
+  selector:
+    app: payment-service-consumer
+  ports:
+  - port: 8601
+    targetPort: 8601

@@ -1,6 +1,9 @@
 package com.example.group11.controller.transaction;
 
 import com.example.group11.commons.utils.RestResult;
+import com.example.group11.model.QuestionModel;
+import com.example.group11.model.TransactionModel;
+import com.example.group11.service.qa.QAService;
 import com.example.group11.service.transaction.TransactionService;
 import com.example.group11.vo.TransactionVO;
 import io.swagger.annotations.ApiOperation;
@@ -24,9 +27,19 @@ public class TransactionController {
     @DubboReference(version="1.0.0", interfaceClass = com.example.group11.service.transaction.TransactionService.class)
     TransactionService transactionService;
 
+    @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.qa.QAService.class)
+    QAService qaService;
+
     @GetMapping("transaction/payForQuestion/{userId}/{questionId}")
     @ApiOperation(notes = "问题可以未，已支付和未支付状态", value = "用户为提问某问题付款", tags = "交易")
     public RestResult payForQuestions(@PathVariable String userId, @PathVariable String questionId) {
+        //TransactionModel transactionModel = transactionService.queryTransactionByQuestionId(Long.parseLong(transactionId));
+        QuestionModel questionModel = qaService.queryQuestionById(Integer.parseInt(questionId));
+        if (questionModel.getPaid()){
+            return RestResult.fail("412", "already paid");
+        }else{
+
+        }
         return RestResult.ok();
     }
 
