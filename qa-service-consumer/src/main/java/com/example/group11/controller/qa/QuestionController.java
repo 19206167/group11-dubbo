@@ -21,6 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
@@ -162,6 +163,7 @@ public class QuestionController {
 
     @PostMapping("/{responderId}/{content}/{reward:.+}/{category}")
     @ApiOperation(notes = "提问问题，首先创建问题，然后再进行支付（已测试）", value = "提问问题", tags = "问题管理")
+    @Transactional
 //    还没有支付
     public RestResult<Map<String, Question>> askQuestion(@PathVariable Long responderId, @PathVariable String content,
                                                          @PathVariable Double reward, @PathVariable String category,
@@ -182,6 +184,7 @@ public class QuestionController {
 
             try {
                 qaService.createQuestion(question);
+
             } catch (Exception e) {
                 return RestResult.fail(e.getMessage());
             }
