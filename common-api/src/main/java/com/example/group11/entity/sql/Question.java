@@ -62,6 +62,7 @@ public class Question implements BaseEntity<Integer>, Serializable {
         this.content = content;
         this.reward = reward;
         this.paid = paid;
+        this.category = category;
         this.answerId = answerId;
         this.commentNum = commentNum;
         this.likeNum = likeNum;

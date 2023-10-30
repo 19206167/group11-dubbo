@@ -17,8 +17,9 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.MySQLDialect
   redis:
-    host: localhost
+    host: 39.107.136.24
     port: 6379
+    password: Jenkins@0101
 
 
 

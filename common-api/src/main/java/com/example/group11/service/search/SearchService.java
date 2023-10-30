@@ -34,6 +34,6 @@ public interface SearchService {
 
     Page<UserES> queryUser(Integer page, Integer size, String keyword);
 
-    Page<QaES> queryQa(Integer page, Integer size, String questionContent, String answerContent);
+    Page<QaES> queryQa(Integer page, Integer size, String questionContent, String answerContent, String category);
 
 }

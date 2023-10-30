@@ -37,7 +37,7 @@ public class SearchController {
     @GetMapping("/questions")
     @ApiOperation(value = "根据关键词搜索问题", tags = "搜索")
     public RestResult<Page<QaES>> searchQuestions(Integer page, Integer size,
-                                                  String questionContent, String answerContent) {
-        return RestResult.ok(searchService.queryQa(page, size, questionContent, answerContent));
+                                                  String questionContent, String answerContent, String category) {
+        return RestResult.ok(searchService.queryQa(page, size, questionContent, answerContent, category));
     }
 }
