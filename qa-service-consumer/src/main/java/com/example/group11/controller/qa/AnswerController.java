@@ -4,6 +4,7 @@ import com.example.group11.commons.utils.JWTUtil;
 import com.example.group11.commons.utils.OrikaUtil;
 import com.example.group11.commons.utils.RestResult;
 import com.example.group11.entity.es.QaES;
+import com.example.group11.entity.sql.Answer;
 import com.example.group11.model.AnswerModel;
 import com.example.group11.model.QuestionModel;
 import com.example.group11.service.qa.QAService;
