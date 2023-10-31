@@ -31,7 +31,7 @@ public class UserController {
     @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.search.SearchService.class, check = false)
     private SearchService searchService;
 
-    @PostMapping("/exapi/sys/user/login")
+    @PostMapping("/sys/user/login")
     @ApiOperation(notes = "用户登录获取token", value = "用户登录获取token", tags = "用户管理")
     public RestResult login(@RequestParam("loginName") String loginName, @RequestParam("password") String password) {
         UserModel userModel = userService.queryUserByLoginName(loginName);

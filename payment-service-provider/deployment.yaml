@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-service-provider
+  labels:
+    app: payment-service-provider
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payment-service-provider
+  template:
+    metadata:
+      labels:
+        app: payment-service-provider    
+    spec:
+      containers:
+      - name: payment-service-provider
+        image: 172.30.229.165/group11-dubbo-node2/payment-service-provider:imageVersion
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: payment-service-provider
+  name: payment-service-provider  
+spec:
+  selector:
+    app: payment-service-provider
+  ports:
+  - port: 8501
+    targetPort: 8501

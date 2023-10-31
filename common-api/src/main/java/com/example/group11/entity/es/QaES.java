@@ -33,6 +33,9 @@ public class QaES implements Serializable {
     private Boolean paid;
 
     @Field
+    private String category;
+
+    @Field
     private String answerId;
 
     @Field

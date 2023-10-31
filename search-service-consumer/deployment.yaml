@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: search-service-consumer
+  labels:
+    app: search-service-consumer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: search-service-consumer
+  template:
+    metadata:
+      labels:
+        app: search-service-consumer    
+    spec:
+      containers:
+      - name: search-service-consumer
+        image: 172.30.229.165/group11-dubbo-node2/search-service-consumer:imageVersion
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: search-service-consumer
+  name: search-service-consumer  
+spec:
+  selector:
+    app: search-service-consumer
+  ports:
+  - port: 8605
+    targetPort: 8605

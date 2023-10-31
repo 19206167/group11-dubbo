@@ -2,6 +2,9 @@ package com.example.group11.controller.transaction;
 
 import com.example.group11.commons.utils.JWTUtil;
 import com.example.group11.commons.utils.RestResult;
+import com.example.group11.model.QuestionModel;
+import com.example.group11.model.TransactionModel;
+import com.example.group11.service.qa.QAService;
 import com.example.group11.service.transaction.TransactionService;
 import com.example.group11.vo.TransactionVO;
 import io.swagger.annotations.ApiOperation;
