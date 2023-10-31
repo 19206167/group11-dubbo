@@ -1,6 +1,9 @@
 package com.example.group11.service.transaction;
 
+
 import java.math.BigDecimal;
+import com.example.group11.model.TransactionModel;
+
 
 /**
  * FileName: PaymentService.java
@@ -11,6 +14,7 @@ import java.math.BigDecimal;
  * @Date 2023/10/14 17:47
  */
 public interface TransactionService {
+
 
 //    向账户充值
     void topup(Long userId, BigDecimal amount);

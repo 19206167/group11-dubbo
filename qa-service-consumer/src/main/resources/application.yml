@@ -17,8 +17,9 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.MySQLDialect
   redis:
-    host: localhost
+    host: 39.107.136.24
     port: 6379
+    password: Jenkins@0101
 
 
 
@@ -40,5 +41,5 @@ dubbo:
   registry:
     id: zookeeper
     #    zookeeper运行端口
-    address: zookeeper://127.0.0.1:2181
+    address: zookeeper://172.24.84.138:2181
 

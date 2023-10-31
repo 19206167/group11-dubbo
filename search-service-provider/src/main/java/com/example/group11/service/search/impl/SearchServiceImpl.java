@@ -147,13 +147,16 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public Page<QaES> queryQa(Integer page, Integer size, String questionContent, String answerContent) {
+    public Page<QaES> queryQa(Integer page, Integer size, String questionContent, String answerContent, String category) {
         BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
         if (CheckUtil.isNotEmpty(questionContent)) {
             queryBuilder.must(QueryBuilders.matchQuery("questionContent", questionContent));
         }
         if (CheckUtil.isNotEmpty(answerContent)) {
             queryBuilder.must(QueryBuilders.matchQuery("answerContent", answerContent));
+        }
+        if(CheckUtil.isNotEmpty(category)) {
+            queryBuilder.must(QueryBuilders.matchQuery("category", category));
         }
         //分页，页码从0开始
         PageRequest of = PageRequest.of(page, size);

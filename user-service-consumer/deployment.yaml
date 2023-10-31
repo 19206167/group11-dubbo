@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service-consumer
+  labels:
+    app: user-service-consumer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-service-consumer
+  template:
+    metadata:
+      labels:
+        app: user-service-consumer    
+    spec:
+      containers:
+      - name: user-service-consumer
+        image: 172.30.229.165/group11-dubbo-node2/user-service-consumer:imageVersion
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: user-service-consumer
+  name: user-service-consumer  
+spec:
+  selector:
+    app: user-service-consumer
+  ports:
+  - port: 8602
+    targetPort: 8602

@@ -31,6 +31,9 @@ public interface QAService extends BaseService<QuestionModel, Integer> {
 //    查看热门问题
     Page<Question> getHottestQuestionsByPage(Integer pageNo, Integer pageSize);
 
+//  按id查找问题
+    QuestionModel queryQuestionById(int questionId);
+
 //    查看用户问题列表
     Page<QuestionModel> getUserQuestionsByPage(QuestionQueryVO questionQueryVO);
 

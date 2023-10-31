@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: qa-service-consumer
+  labels:
+    app: qa-service-consumer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: qa-service-consumer
+  template:
+    metadata:
+      labels:
+        app: qa-service-consumer    
+    spec:
+      containers:
+      - name: qa-service-consumer
+        image: 172.30.229.165/group11-dubbo-node2/qa-service-consumer:imageVersion
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: qa-service-consumer
+  name: qa-service-consumer  
+spec:
+  selector:
+    app: qa-service-consumer
+  ports:
+  - port: 8603
+    targetPort: 8603

@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: file-service-consumer
+  labels:
+    app: file-service-consumer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: file-service-consumer
+  template:
+    metadata:
+      labels:
+        app: file-service-consumer    
+    spec:
+      containers:
+      - name: file-service-consumer
+        image: 172.30.229.165/group11-dubbo-node2/file-service-consumer:imageVersion
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: file-service-consumer
+  name: file-service-consumer  
+spec:
+  selector:
+    app: file-service-consumer
+  ports:
+  - port: 8606
+    targetPort: 8606

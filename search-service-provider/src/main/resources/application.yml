@@ -17,6 +17,11 @@ spring:
       max-request-size: 2048MB
   jpa:
     database-platform: org.hibernate.dialect.MySQLDialect
+  elasticsearch:
+    rest:
+      uris: http://39.107.136.24:9200
+
+
 # 服务运行端口
 server:
   port: 8505
@@ -37,8 +42,6 @@ dubbo:
   registry:
     id: zookeeper
     #    zookeeper运行端口
-    address: zookeeper://127.0.0.1:2181
+    address: zookeeper://172.24.84.138:2181
 
-  elasticsearch:
-    rest:
-      uris: localhost:9200
+

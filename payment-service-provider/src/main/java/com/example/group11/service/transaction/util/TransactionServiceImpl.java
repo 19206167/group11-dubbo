@@ -6,7 +6,11 @@ import com.example.group11.entity.sql.Transaction;
 import com.example.group11.entity.sql.User;
 import com.example.group11.repository.transaction.TransactionRepository;
 import com.example.group11.repository.user.UserRepository;
+import com.example.group11.commons.utils.BaseServiceImpl;
+import com.example.group11.entity.sql.Transaction;
+import com.example.group11.model.TransactionModel;
 import com.example.group11.service.transaction.TransactionService;
+import com.example.group11.repository.transaction.TransactionRepository;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.handler.HandlerMethodMappingNamingStrategy;
@@ -14,6 +18,7 @@ import org.springframework.web.servlet.handler.HandlerMethodMappingNamingStrateg
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.Optional;
+
 
 /**
  * FileName: TransactionServiceImpl.java
@@ -25,12 +30,23 @@ import java.util.Optional;
  */
 
 @DubboService(version="1.0.0", interfaceClass = com.example.group11.service.transaction.TransactionService.class)
+
 public class TransactionServiceImpl implements TransactionService {
     @Autowired
     UserRepository userRepository;
 
     @Autowired
     TransactionRepository transactionRepository;
+  
+   @Override
+    protected Class<TransactionModel> getModelType() {
+        return TransactionModel.class;
+    }
+
+    @Override
+    protected Class<Transaction> getEntityType() {
+        return Transaction.class;
+    }
 
     @Override
     @Transactional
@@ -99,5 +115,4 @@ public class TransactionServiceImpl implements TransactionService {
         Optional<User> receiver = userRepository.findById(receiverId);
         receiver.get().setBalance(receiver.get().getBalance().add(reward));
         userRepository.save(receiver.get());
-    }
 }

@@ -35,5 +35,5 @@ dubbo:
   registry:
     id: zookeeper
     #    zookeeper运行端口
-    address: zookeeper://127.0.0.1:2181
+    address: zookeeper://172.24.84.138:2181
 

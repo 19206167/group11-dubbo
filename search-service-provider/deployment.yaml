@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: search-service-provider
+  labels:
+    app: search-service-provider
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: search-service-provider
+  template:
+    metadata:
+      labels:
+        app: search-service-provider    
+    spec:
+      containers:
+      - name: search-service-provider
+        image: 172.30.229.165/group11-dubbo-node2/search-service-provider:imageVersion
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: search-service-provider
+  name: search-service-provider  
+spec:
+  selector:
+    app: search-service-provider
+  ports:
+  - port: 8505
+    targetPort: 8505
