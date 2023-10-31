@@ -59,12 +59,10 @@ public class TransactionServiceImpl implements TransactionService {
         if (account.compareTo(new BigDecimal(0)) == -1) {
             throw new Group11Exception(ErrorCode.COMMON_ERROR, "账户余额不足，无法提问");
         }
-//        提问者扣款，回答者收钱
+//        提问者扣款
         asker.get().setBalance(account);
         userRepository.save(asker.get());
-        Optional<User> receiver = userRepository.findById(receiverId);
-        receiver.get().setBalance(receiver.get().getBalance().add(account));
-        userRepository.save(receiver.get());
+//        回答者回答后收钱
         return transaction.getId();
     }
 
@@ -85,8 +83,10 @@ public class TransactionServiceImpl implements TransactionService {
         }
 //        提问者扣款，回答者收钱
         asker.get().setBalance(account);
-        Optional<User> receiver = userRepository.findById(receiverId);
         userRepository.save(asker.get());
+        Optional<User> receiver = userRepository.findById(receiverId);
+        receiver.get().setBalance(receiver.get().getBalance().add(account));
+        userRepository.save(receiver.get());
         return transaction.getId();
     }
 
