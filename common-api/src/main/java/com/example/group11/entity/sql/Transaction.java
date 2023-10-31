@@ -37,6 +37,7 @@ public class Transaction implements BaseEntity<Long>, Serializable {
 
     private BigDecimal amount;
 
+//    1表示给自己账户充值，2表示购买问题，3表示偷听问题. 4表示收益
     private Integer operation;
 
     private Boolean deleted;
@@ -44,5 +45,15 @@ public class Transaction implements BaseEntity<Long>, Serializable {
     private LocalDateTime createTime;
 
     private String remark;
+
+    public Transaction() {
+    }
+
+    public Transaction(Long userId, Long receiverId, BigDecimal amount, Integer operation) {
+        this.userId = userId;
+        this.receiverId = receiverId;
+        this.amount = amount;
+        this.operation = operation;
+    }
 }
 

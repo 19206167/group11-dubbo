@@ -8,7 +8,9 @@ import com.example.group11.model.QuestionModel;
 import com.example.group11.repository.qa.*;
 import com.example.group11.repository.user.UserRepository;
 import com.example.group11.service.qa.QAService;
+import com.example.group11.service.transaction.TransactionService;
 import com.example.group11.vo.query.QuestionQueryVO;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,6 +22,8 @@ import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
+import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -56,6 +60,9 @@ public class QAServiceImpl extends BaseServiceImpl<QuestionModel, Question, Inte
     @Autowired
     UserRepository userRepository;
 
+    @DubboReference(version="1.0.0", interfaceClass = com.example.group11.service.transaction.TransactionService.class)
+    TransactionService transactionService;
+
     @Override
     protected Class<QuestionModel> getModelType() {
         return QuestionModel.class;
@@ -75,6 +82,7 @@ public class QAServiceImpl extends BaseServiceImpl<QuestionModel, Question, Inte
      **/
 
     @Override
+    @Transactional
     public void createQuestion(Question question) throws Group11Exception {
         Long responderId = question.getResponderId();
         Optional<User> user = userRepository.findById(responderId);
@@ -85,7 +93,11 @@ public class QAServiceImpl extends BaseServiceImpl<QuestionModel, Question, Inte
                 throw new Group11Exception(ErrorCode.USER_ROLE_ERROR, "被提问者不是写作者，提问者只能向写作者提问。");
             }
 
-//        向数据库中添加数据
+            // 账户扣款
+            transactionService.payForCreateQuestion(question.getAskerId(), question.getAskerId(), question.getReward());
+            question.setPaid(true);
+
+            // 向数据库中添加数据
             questionRepository.save(question);
         }
     }
@@ -112,6 +124,16 @@ public class QAServiceImpl extends BaseServiceImpl<QuestionModel, Question, Inte
 //            如果问题的askerId不等于用户id, 抛出异常
             throw new Group11Exception(ErrorCode.EMPTY_RESULT, "问题不属于该用户，没有删除权限");
         }
+    }
+
+    @Override
+    public Page<Question> getHottestQuestionsByPage(Integer pageNo, Integer pageSize) {
+        pageNo = CheckUtil.isNotEmpty(pageNo) ? pageNo : PageEnum.DEFAULT_PAGE_NO.getKey();
+        pageSize = CheckUtil.isNotEmpty(pageSize) ? pageSize : PageEnum.DEFAULT_PAGE_SIZE.getKey();
+        Sort sort = Sort.by(Sort.Direction.DESC, "likeNum", "commmentNum", "id");
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+
+        return questionRepository.findAll(pageable);
     }
 
     /*
@@ -154,6 +176,7 @@ public class QAServiceImpl extends BaseServiceImpl<QuestionModel, Question, Inte
      * @return: void
      **/
     @Override
+    @Transactional
     public Answer answerQuestion(AnswerModel answerModel) throws Group11Exception{
 
         Optional<Question> question = questionRepository.findById(answerModel.getQuestionId());
@@ -167,6 +190,7 @@ public class QAServiceImpl extends BaseServiceImpl<QuestionModel, Question, Inte
                 answerRepository.save(answer);
                 question.get().setAnswerId(answer.getId());
                 questionRepository.save(question.get());
+                transactionService.getQuestionReward(question.get().getResponderId(), question.get().getReward());
             } else {
                 throw new Group11Exception(ErrorCode.USER_ROLE_ERROR);
             }
@@ -225,7 +249,13 @@ public class QAServiceImpl extends BaseServiceImpl<QuestionModel, Question, Inte
     }
 
     @Override
-    public boolean eavesdropQuestionById(Long userId, Integer questionId, Integer transactionId) {
+    public BigDecimal getEavesdropQuestionById(Integer questionId) {
+        return questionRepository.findById(questionId).get().getReward().multiply(new BigDecimal(0.1));
+    }
+
+    @Override
+    @Transactional
+    public boolean eavesdropQuestionById(Long userId, Integer questionId, BigDecimal amount) {
 
         Optional<Question> question = questionRepository.findById(questionId);
 
@@ -237,6 +267,9 @@ public class QAServiceImpl extends BaseServiceImpl<QuestionModel, Question, Inte
 
 //        如果当前对象不存在，更新，如果已经存在，插入新的数据
         if (!eavedrop.isPresent()) {
+//            偷听问题，按照支付金额的10%扣款
+            Long transactionId = transactionService.payForEavesdropping(userId, question.get().getResponderId(),
+                    question.get().getReward().multiply(amount));
             EavedropedQuestion eavedropedQuestion = new EavedropedQuestion(userId, questionId, transactionId);
             eavedropedQuestionRepository.save(eavedropedQuestion);
         }
