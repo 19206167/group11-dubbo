@@ -34,7 +34,7 @@ public class EavedropedQuestion implements BaseEntity<Integer>, Serializable {
 
     private Integer questionId;
 
-    private Integer transactionId;
+    private Long transactionId;
 
     private LocalDateTime createTime;
 
@@ -45,7 +45,7 @@ public class EavedropedQuestion implements BaseEntity<Integer>, Serializable {
 
     public EavedropedQuestion() {}
 
-    public EavedropedQuestion(Long userId, Integer questionId, Integer transactionId) {
+    public EavedropedQuestion(Long userId, Integer questionId, Long transactionId) {
         this.userId = userId;
         this.questionId = questionId;
         this.transactionId = transactionId;

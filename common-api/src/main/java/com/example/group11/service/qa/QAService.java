@@ -9,6 +9,7 @@ import com.example.group11.model.QuestionModel;
 import com.example.group11.vo.query.QuestionQueryVO;
 import org.springframework.data.domain.Page;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -27,9 +28,11 @@ public interface QAService extends BaseService<QuestionModel, Integer> {
 //    删除问题
     boolean deleteQuestion(Long userId, Integer questionId);
 
+//    查看热门问题
+    Page<Question> getHottestQuestionsByPage(Integer pageNo, Integer pageSize);
+
 //  按id查找问题
     QuestionModel queryQuestionById(int questionId);
-
 
 //    查看用户问题列表
     Page<QuestionModel> getUserQuestionsByPage(QuestionQueryVO questionQueryVO);
@@ -57,8 +60,11 @@ public interface QAService extends BaseService<QuestionModel, Integer> {
 //    判断是否偷听
     boolean checkUserEavesdropQuestion(Long userId, Integer questionId);
 
+//    获取偷听衣服的价格
+    BigDecimal getEavesdropQuestionById(Integer questionId);
+
 //    偷听问题
-    boolean eavesdropQuestionById(Long userId, Integer questionId, Integer transactionId);
+    boolean eavesdropQuestionById(Long userId, Integer questionId, BigDecimal amount);
 
 //    查看用户偷听的问题
     Page<Question> checkEavesdropQuestionByUserIdByPage(Long userId, Integer pageNo, Integer pageSize);

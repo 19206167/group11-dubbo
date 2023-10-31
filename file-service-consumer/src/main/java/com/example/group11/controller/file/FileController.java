@@ -33,13 +33,12 @@ public class FileController {
     public RestResult<String> uploadFile(@RequestParam("file") MultipartFile file) {
 //        获取后缀用于判断是图片还是音频
         String suffix = file.getContentType().toLowerCase();
-        suffix = suffix.substring(suffix.indexOf('/') + 1, suffix.length());
+        suffix = suffix.substring(suffix.indexOf('/') + 1);
 
 //        transfer file to local file and upload
 //        String filePath = "\\logs";
 
         String fileName = UUID.randomUUID().toString().replaceAll("-","") + "." + suffix;
-
         log.info(fileName);
 
 //        read file
@@ -67,13 +66,6 @@ public class FileController {
             }
         }
 
-//        try {
-//            file.transferTo(local);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
-
         log.info(suffix);
         String url;
         if (suffix.equals("jpg") || suffix.equals("jpeg") || suffix.equals("png")) {
@@ -93,7 +85,7 @@ public class FileController {
     }
 
     /**
-     * 文件下载
+     * 文件下载，前端自行下载
      */
     @GetMapping("/download/{fileId}")
     @ApiOperation(notes = "统一文件下载接口", value = "统一文件下载接口", tags = "文件管理")

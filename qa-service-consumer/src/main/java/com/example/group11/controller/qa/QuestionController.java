@@ -21,6 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
@@ -75,8 +76,8 @@ public class QuestionController {
 
     @GetMapping("/hot/question-list")
     @ApiOperation(notes = "首页热门回答列表（还没有想好按照哪种方式判断热门回答）", value = "首页热门回答列表", tags = "问题管理")
-    public RestResult<List<QuestionVO>> queryHotQuestionList() {
-        return RestResult.ok();
+    public RestResult<Page<Question>> queryHotQuestionList(Integer pageNo, Integer pageSize) {
+        return RestResult.ok(qaService.getHottestQuestionsByPage(pageNo, pageSize));
     }
 
     @GetMapping("/my")
@@ -131,11 +132,17 @@ public class QuestionController {
         return RestResult.ok(qaService.checkEavesdropQuestionByUserIdByPage(userId, pageNo, pageSize));
     }
 
-    @GetMapping("/eavesdropping/{questionId}")
+    @GetMapping("/eavesdropping/amount/{questionId}")
+    @ApiOperation(notes = "获取偷听问题价格", value = "获取偷听问题价格", tags = "问题管理")
+    public RestResult<BigDecimal> getEavesdroppingQuestionPrice(@PathVariable Integer questionId) {
+        BigDecimal amount = qaService.getEavesdropQuestionById(questionId);
+        return RestResult.ok(amount);
+    }
+
+    @GetMapping("/eavesdropping/{questionId}/{amount}")
 //    若该回答还有音频版本，则调用该接口后，再调用统一下载接口对应音频文件实现在线播放
-    @ApiOperation(notes = "偷听问题(已测试)",
-            value = "偷听问题", tags = "问题管理")
-    public RestResult<Boolean> eavesdroppingQuestion(@PathVariable Integer questionId, HttpServletRequest httpServletRequest) {
+    @ApiOperation(notes = "偷听问题(已测试)", value = "偷听问题", tags = "问题管理")
+    public RestResult<Boolean> eavesdroppingQuestion(@PathVariable Integer questionId, BigDecimal amount, HttpServletRequest httpServletRequest) {
         // 获取当前用户id
         String token = JWTUtil.getToken(httpServletRequest);
         Long userId = JWTUtil.getUserId(token);
@@ -148,10 +155,8 @@ public class QuestionController {
             // 说明该用户没有购买此问题
             try {
                 // 扣钱，变更问题对该用户状态(不可见->可见)，返回回答内容
-//        transactionService.payForEavesdroppingQuestion(userId, questionId);
-                Integer transactionId = 0;
                 // 若该回答还有音频版本，则调用该接口后，再调用统一下载接口对应音频文件实现在线播放
-                qaService.eavesdropQuestionById(userId, questionId, transactionId);
+                qaService.eavesdropQuestionById(userId, questionId, amount);
             } catch (Exception e) {
                 return RestResult.fail(e.getMessage());
             }
@@ -162,6 +167,7 @@ public class QuestionController {
 
     @PostMapping("/{responderId}/{content}/{reward:.+}/{category}")
     @ApiOperation(notes = "提问问题，首先创建问题，然后再进行支付（已测试）", value = "提问问题", tags = "问题管理")
+    @Transactional
 //    还没有支付
     public RestResult<Map<String, Question>> askQuestion(@PathVariable Long responderId, @PathVariable String content,
                                                          @PathVariable Double reward, @PathVariable String category,
@@ -182,6 +188,7 @@ public class QuestionController {
 
             try {
                 qaService.createQuestion(question);
+
             } catch (Exception e) {
                 return RestResult.fail(e.getMessage());
             }
