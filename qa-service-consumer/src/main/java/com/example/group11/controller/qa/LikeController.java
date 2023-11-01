@@ -24,7 +24,6 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @Slf4j
 @RequestMapping("/api/like")
-@CrossOrigin(value = "*", maxAge = 3600)
 public class LikeController {
     @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.qa.QAService.class)
     QAService qaService;

@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @Slf4j
 @RequestMapping("/api/comment")
-@CrossOrigin(value = "*", maxAge = 3600)
+
 public class CommentController {
     @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.qa.QAService.class)
     QAService qaService;

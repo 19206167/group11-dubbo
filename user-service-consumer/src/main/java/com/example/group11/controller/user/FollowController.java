@@ -22,7 +22,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequestMapping("/sys/follow")
-@CrossOrigin(value = "*", maxAge = 3600)
+
 public class FollowController {
 
     @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.user.UserService.class)

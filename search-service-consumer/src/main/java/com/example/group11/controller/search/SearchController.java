@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/sys/search")
-@CrossOrigin(value = "*", maxAge = 3600)
+
 public class SearchController {
 
     @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.search.SearchService.class)

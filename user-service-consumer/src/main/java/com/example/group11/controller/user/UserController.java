@@ -23,7 +23,6 @@ import java.util.List;
 
 @RestController
 @Slf4j
-@CrossOrigin(value = "*", maxAge = 3600)
 public class UserController {
 
     @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.user.UserService.class)

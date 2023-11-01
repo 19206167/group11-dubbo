@@ -31,7 +31,6 @@ import java.util.stream.Collectors;
 @RestController
 @Slf4j
 @RequestMapping("/api/question")
-@CrossOrigin(value = "*", maxAge = 3600)
 public class QuestionController {
 
     @Autowired

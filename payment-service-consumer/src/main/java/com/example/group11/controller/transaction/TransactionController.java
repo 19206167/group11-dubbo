@@ -21,7 +21,6 @@ import java.math.BigDecimal;
  * @Date 2023/10/11 21:01
  */
 @RestController
-@CrossOrigin(value = "*", maxAge = 3600)
 public class TransactionController {
     @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.transaction.TransactionService.class)
     TransactionService transactionService;
