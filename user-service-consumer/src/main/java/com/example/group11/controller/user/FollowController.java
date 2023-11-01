@@ -5,7 +5,6 @@ import com.example.group11.commons.utils.CheckUtil;
 import com.example.group11.commons.utils.JWTUtil;
 import com.example.group11.commons.utils.OrikaUtil;
 import com.example.group11.commons.utils.RestResult;
-import com.example.group11.entity.sql.User;
 import com.example.group11.model.FollowModel;
 import com.example.group11.model.UserModel;
 import com.example.group11.service.user.FollowService;
@@ -15,18 +14,15 @@ import com.example.group11.vo.query.UserQueryVO;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.criteria.Predicate;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @Slf4j
 @RequestMapping("/sys/follow")
+@CrossOrigin(value = "*", maxAge = 3600)
 public class FollowController {
 
     @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.user.UserService.class)
@@ -86,7 +82,7 @@ public class FollowController {
         Long userId = JWTUtil.getUserId(token);
         log.info("[addFollowingUser],followedUserId={},userId={}", followedUserId, userId);
 
-        if(userId.equals(followedUserId)) {
+        if (userId.equals(followedUserId)) {
             return RestResult.fail("用户不能关注自己");
         }
         UserModel userModel = userService.findById(followedUserId);
@@ -135,7 +131,7 @@ public class FollowController {
 
 
         List<FollowModel> followModelList = followService.queryFollowModelByFollowingIdAndFollowedId(followingUserId, userId);
-        if(CheckUtil.isNotEmpty(followModelList)) {
+        if (CheckUtil.isNotEmpty(followModelList)) {
             followService.deleteInBatch(followModelList);
         }
         return RestResult.ok();

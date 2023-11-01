@@ -8,6 +8,7 @@ import com.example.group11.service.search.SearchService;
 import io.swagger.annotations.ApiOperation;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/sys/search")
+@CrossOrigin(value = "*", maxAge = 3600)
 public class SearchController {
 
     @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.search.SearchService.class)

@@ -5,7 +5,6 @@ import com.example.group11.commons.utils.RestResult;
 import com.example.group11.redis.RedisService;
 import com.example.group11.service.qa.QAService;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @Slf4j
 @RequestMapping("/api/like")
+@CrossOrigin(value = "*", maxAge = 3600)
 public class LikeController {
     @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.qa.QAService.class)
     QAService qaService;
@@ -49,7 +49,7 @@ public class LikeController {
         Long userId = JWTUtil.getUserId(token);
 
 //        if (qaService.like(userId, questionId)){
-            return RestResult.ok(redisService.saveLiked2Redis(questionId.toString(), userId.toString()));
+        return RestResult.ok(redisService.saveLiked2Redis(questionId.toString(), userId.toString()));
 //        } else {
 //            return RestResult.fail("不能重复点赞");
 //        }
@@ -70,7 +70,7 @@ public class LikeController {
         Long userId = JWTUtil.getUserId(token);
 
 //        if (qaService.cancelLike(userId, questionId)){
-            return RestResult.ok(redisService.unlikeFromRedis(questionId.toString(), userId.toString()));
+        return RestResult.ok(redisService.unlikeFromRedis(questionId.toString(), userId.toString()));
 //        } else {
 //            return RestResult.fail("还没有点赞，不能取消");
 //        }
