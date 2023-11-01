@@ -19,6 +19,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RestController
@@ -46,6 +47,16 @@ public class UserController {
     @GetMapping("/sys/user/loginname/{loginName}")
     @ApiOperation(notes = "根据用户名查询用户信息", value = "根据用户名查询用户信息", tags = "用户管理")
     public RestResult<UserVO> queryUserByLoginName(@PathVariable String loginName) {
+        log.info(loginName);
+//        response.setHeader("Access-Control-Allow-Origin", "*");
+////* 代办允许所有方法
+//        response.setHeader("Access-Control-Allow-Methods", "*");
+//// Access-Control-Max-Age 用于 CORS 相关配置的缓存
+//        response.setHeader("Access-Control-Max-Age", "3600");
+//// 提示OPTIONS预检时，后端需要设置的两个常用自定义头
+//        response.setHeader("Access-Control-Allow-Headers", "*");
+//// 允许前端带认证cookie：启用此项后，上面的域名不能为'*'，必须指定具体的域名，否则浏览器会提示
+//        response.setHeader("Access-Control-Allow-Credentials", "true");
         UserModel userModel = userService.queryUserByLoginName(loginName);
         return RestResult.ok(OrikaUtil.map(userModel, UserVO.class));
     }
