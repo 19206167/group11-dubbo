@@ -9,7 +9,7 @@ import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 
-@Configuration
+//@Configuration
 public class WebMvcConfiguration implements WebMvcConfigurer {
     @Bean(name = "corsFilter")
     public FilterRegistrationBean<CorsFilter> corsFilter() {
