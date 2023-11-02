@@ -1,4 +1,4 @@
-package com.example.group11.filter;
+package com.example.group11.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
