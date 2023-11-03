@@ -25,10 +25,10 @@ import java.util.List;
 
 public class FollowController {
 
-    @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.user.UserService.class)
+    @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.user.UserService.class, timeout = 10000)
     private UserService userService;
 
-    @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.user.FollowService.class)
+    @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.user.FollowService.class, timeout = 10000)
     private FollowService followService;
 
     @GetMapping("/me/fan-list")

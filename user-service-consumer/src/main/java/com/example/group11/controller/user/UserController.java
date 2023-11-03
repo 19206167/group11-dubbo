@@ -26,10 +26,10 @@ import java.util.List;
 @Slf4j
 public class UserController {
 
-    @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.user.UserService.class)
+    @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.user.UserService.class, timeout = 10000)
     private UserService userService;
 
-    @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.search.SearchService.class, check = false)
+    @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.search.SearchService.class, check = false, timeout = 10000)
     private SearchService searchService;
 
 

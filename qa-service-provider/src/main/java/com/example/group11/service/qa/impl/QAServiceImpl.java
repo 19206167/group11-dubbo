@@ -60,7 +60,7 @@ public class QAServiceImpl extends BaseServiceImpl<QuestionModel, Question, Inte
     @Autowired
     UserRepository userRepository;
 
-    @DubboReference(version="1.0.0", interfaceClass = com.example.group11.service.transaction.TransactionService.class)
+    @DubboReference(version="1.0.0", interfaceClass = com.example.group11.service.transaction.TransactionService.class, timeout = 10000)
     TransactionService transactionService;
 
     @Override

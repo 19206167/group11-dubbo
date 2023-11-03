@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/api/comment")
 
 public class CommentController {
-    @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.qa.QAService.class)
+    @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.qa.QAService.class, timeout = 10000)
     QAService qaService;
 
     @PostMapping("/{questionId}/{content}")

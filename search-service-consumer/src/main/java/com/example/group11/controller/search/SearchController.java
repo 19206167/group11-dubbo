@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 public class SearchController {
 
-    @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.search.SearchService.class)
+    @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.search.SearchService.class, timeout = 10000)
     private SearchService searchService;
 
     @GetMapping("/user")

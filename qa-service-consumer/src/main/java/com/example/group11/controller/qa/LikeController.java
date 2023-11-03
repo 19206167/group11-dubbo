@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 @RequestMapping("/api/like")
 public class LikeController {
-    @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.qa.QAService.class)
+    @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.qa.QAService.class, timeout = 10000)
     QAService qaService;
 
     @Autowired
