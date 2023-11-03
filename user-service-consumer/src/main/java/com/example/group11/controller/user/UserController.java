@@ -32,6 +32,14 @@ public class UserController {
     @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.search.SearchService.class, check = false)
     private SearchService searchService;
 
+
+    @GetMapping("/sys/user/test")
+    @ApiOperation(notes = "test", value = "test", tags = "用户管理")
+    public RestResult<String> test() {
+        return RestResult.ok("1111111");
+    }
+
+
     @PostMapping("/sys/user/login")
     @ApiOperation(notes = "用户登录获取token", value = "用户登录获取token", tags = "用户管理")
     public RestResult login(@RequestParam("loginName") String loginName, @RequestParam("password") String password) {
