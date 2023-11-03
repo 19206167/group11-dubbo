@@ -44,6 +44,9 @@ public class UserController {
     @ApiOperation(notes = "用户登录获取token", value = "用户登录获取token", tags = "用户管理")
     public RestResult login(@RequestParam("loginName") String loginName, @RequestParam("password") String password) {
         UserModel userModel = userService.queryUserByLoginName(loginName);
+        if(CheckUtil.isEmpty(userModel)) {
+            return RestResult.fail("该用户名对应的用户不存在");
+        }
         log.info(userModel.toString());
         if (userModel.getPassword().equals(ShiroUtil.sha256(password, userModel.getSalt()))) {
             return RestResult.ok(JWTUtil.sign(userModel.getLoginName(), userModel.getId(), userModel.getRole()));
