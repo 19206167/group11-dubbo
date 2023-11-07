@@ -42,13 +42,19 @@ public class QuestionController {
     @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.search.SearchService.class, timeout = 10000)
     private SearchService searchService;
 
-    @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.qa.QAService.class, timeout = 10000)
+    @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.qa.QAService.class, timeout = 50000)
     QAService qaService;
 
     @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.transaction.TransactionService.class, check = false, timeout = 10000)
     TransactionService transactionService;
 
-    @GetMapping("/all/{userId}")
+    @GetMapping("/{id}")
+    @ApiOperation(notes = "根据问题id查询问题", value = "查询用户全部问题", tags = "问题管理")
+    public RestResult<QuestionModel> queryQuestionById(@PathVariable Integer id) {
+        return RestResult.ok(qaService.findById(id));
+    }
+
+    @GetMapping("/all-question/{userId}")
     @ApiOperation(notes = "查询用户全部问题(已测试)", value = "查询用户全部问题", tags = "问题管理")
     public RestResult<Page<QuestionModel>> queryAllQuestionList(@PathVariable Long userId, Integer pageNo, Integer pageSize) {
 
@@ -68,7 +74,7 @@ public class QuestionController {
 //        return RestResult.ok();
 //    }
 
-    @GetMapping("/all/{category}")
+    @GetMapping("/all/category/{category}")
     @ApiOperation(notes = "根据类型获取问题，如果获取全部问题，category为all", value = "根据类型获取问", tags = "问题管理")
     public RestResult<Page<Question>> queryAllQuestionByCategory(@PathVariable String category, Integer pageNo, Integer pageSize){
         return RestResult.ok(qaService.queryAllQuestionByCategory(category, pageNo, pageSize));
@@ -142,7 +148,7 @@ public class QuestionController {
     @GetMapping("/eavesdropping/{questionId}/{amount}")
 //    若该回答还有音频版本，则调用该接口后，再调用统一下载接口对应音频文件实现在线播放
     @ApiOperation(notes = "偷听问题(已测试)", value = "偷听问题", tags = "问题管理")
-    public RestResult<Boolean> eavesdroppingQuestion(@PathVariable Integer questionId, BigDecimal amount, HttpServletRequest httpServletRequest) {
+    public RestResult<Boolean> eavesdroppingQuestion(@PathVariable Integer questionId, @PathVariable BigDecimal amount, HttpServletRequest httpServletRequest) {
         // 获取当前用户id
         String token = JWTUtil.getToken(httpServletRequest);
         Long userId = JWTUtil.getUserId(token);
