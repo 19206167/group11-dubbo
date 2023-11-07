@@ -26,10 +26,10 @@ public class TransactionController {
     TransactionService transactionService;
 
 
-    @GetMapping("transaction/topUp")
-    @ApiOperation(value = "用户为账户充值", tags = "交易")
-    public RestResult topUpAccount(BigDecimal amount, HttpServletRequest httpServletRequest) {
-        // 获取当前用户id
+    @GetMapping("/transaction/topUp")
+        @ApiOperation(value = "用户为账户充值", tags = "交易")
+        public RestResult topUpAccount(BigDecimal amount, HttpServletRequest httpServletRequest) {
+            // 获取当前用户id
         String token = JWTUtil.getToken(httpServletRequest);
         Long userId = JWTUtil.getUserId(token);
 
