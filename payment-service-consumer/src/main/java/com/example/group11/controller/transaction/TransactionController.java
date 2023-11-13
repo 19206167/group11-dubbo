@@ -31,7 +31,7 @@ public class TransactionController {
     TransactionService transactionService;
 
 
-    @GetMapping("/transaction/topUp")
+    @GetMapping("/topUp")
     @ApiOperation(value = "用户为账户充值", tags = "交易")
     public RestResult topUpAccount(Double amount, HttpServletRequest httpServletRequest) {
         // 获取当前用户id

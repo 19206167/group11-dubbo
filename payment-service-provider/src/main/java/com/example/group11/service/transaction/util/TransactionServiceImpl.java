@@ -37,13 +37,11 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Autowired
     TransactionRepository transactionRepository;
-  
-   @Override
+
     protected Class<TransactionModel> getModelType() {
         return TransactionModel.class;
     }
 
-    @Override
     protected Class<Transaction> getEntityType() {
         return Transaction.class;
     }
@@ -115,4 +113,5 @@ public class TransactionServiceImpl implements TransactionService {
         Optional<User> receiver = userRepository.findById(receiverId);
         receiver.get().setBalance(receiver.get().getBalance().add(reward));
         userRepository.save(receiver.get());
+    }
 }
