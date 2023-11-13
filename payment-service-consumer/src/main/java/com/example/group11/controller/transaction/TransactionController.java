@@ -27,14 +27,17 @@ public class TransactionController {
     TransactionService transactionService;
 
 
+
     @GetMapping("/topUp")
     @ApiOperation(value = "用户为账户充值", tags = "交易")
-    public RestResult topUpAccount(BigDecimal amount, HttpServletRequest httpServletRequest) {
+    public RestResult topUpAccount(Double amount, HttpServletRequest httpServletRequest) {
         // 获取当前用户id
         String token = JWTUtil.getToken(httpServletRequest);
         Long userId = JWTUtil.getUserId(token);
 
-        transactionService.topup(userId, amount);
+        BigDecimal amount1 = BigDecimal.valueOf(amount);
+
+        transactionService.topup(userId, amount1);
         return RestResult.ok();
     }
 }

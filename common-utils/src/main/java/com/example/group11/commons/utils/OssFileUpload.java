@@ -34,4 +34,8 @@ public class OssFileUpload {
             ossClient.shutdown();
         }
     }
+
+    public static String getEndpoint(){
+        return endpoint;
+    }
 }

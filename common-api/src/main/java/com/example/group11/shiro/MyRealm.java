@@ -23,7 +23,8 @@ import java.util.List;
 @Service
 public class MyRealm extends AuthorizingRealm {
 
-    @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.user.UserService.class, timeout = 10000)
+
+    @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.user.UserService.class, check = false, timeout = 10000)
     private UserService userService;
 
     /**
