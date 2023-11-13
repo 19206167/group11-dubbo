@@ -19,33 +19,55 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RestController
 @Slf4j
 public class UserController {
 
-    @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.user.UserService.class)
+    @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.user.UserService.class, timeout = 10000)
     private UserService userService;
 
-    @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.search.SearchService.class, check = false)
+    @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.search.SearchService.class, check = false, timeout = 10000)
     private SearchService searchService;
+
+
+    @GetMapping("/sys/user/test")
+    @ApiOperation(notes = "test", value = "test", tags = "用户管理")
+    public RestResult<String> test() {
+        return RestResult.ok("1111111");
+    }
+
 
     @PostMapping("/sys/user/login")
     @ApiOperation(notes = "用户登录获取token", value = "用户登录获取token", tags = "用户管理")
     public RestResult login(@RequestParam("loginName") String loginName, @RequestParam("password") String password) {
         UserModel userModel = userService.queryUserByLoginName(loginName);
+        if(CheckUtil.isEmpty(userModel)) {
+            return RestResult.fail("该用户名对应的用户不存在");
+        }
         log.info(userModel.toString());
         if (userModel.getPassword().equals(ShiroUtil.sha256(password, userModel.getSalt()))) {
             return RestResult.ok(JWTUtil.sign(userModel.getLoginName(), userModel.getId(), userModel.getRole()));
         } else {
-            throw Group11Exception.unauthorized("未认证");
+            return RestResult.fail("用户名密码错误");
         }
     }
 
     @GetMapping("/sys/user/loginname/{loginName}")
     @ApiOperation(notes = "根据用户名查询用户信息", value = "根据用户名查询用户信息", tags = "用户管理")
     public RestResult<UserVO> queryUserByLoginName(@PathVariable String loginName) {
+        log.info(loginName);
+//        response.setHeader("Access-Control-Allow-Origin", "*");
+////* 代办允许所有方法
+//        response.setHeader("Access-Control-Allow-Methods", "*");
+//// Access-Control-Max-Age 用于 CORS 相关配置的缓存
+//        response.setHeader("Access-Control-Max-Age", "3600");
+//// 提示OPTIONS预检时，后端需要设置的两个常用自定义头
+//        response.setHeader("Access-Control-Allow-Headers", "*");
+//// 允许前端带认证cookie：启用此项后，上面的域名不能为'*'，必须指定具体的域名，否则浏览器会提示
+//        response.setHeader("Access-Control-Allow-Credentials", "true");
         UserModel userModel = userService.queryUserByLoginName(loginName);
         return RestResult.ok(OrikaUtil.map(userModel, UserVO.class));
     }

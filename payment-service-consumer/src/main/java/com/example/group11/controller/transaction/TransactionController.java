@@ -10,7 +10,7 @@ import com.example.group11.vo.TransactionVO;
 import io.swagger.annotations.ApiOperation;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,9 +26,11 @@ import java.util.List;
  * @Date 2023/10/11 21:01
  */
 @RestController
+@RequestMapping("/transaction")
 public class TransactionController {
-    @DubboReference(version="1.0.0", interfaceClass = com.example.group11.service.transaction.TransactionService.class)
+    @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.transaction.TransactionService.class, timeout = 10000)
     TransactionService transactionService;
+
 
 
     @GetMapping("/topUp")

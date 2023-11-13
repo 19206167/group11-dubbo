@@ -18,7 +18,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/file")
-@CrossOrigin(value = "*", maxAge = 3600)
+
 @Slf4j
 public class FileController {
 

@@ -41,14 +41,14 @@ public class AnswerController {
     @Autowired
     private WebSocketServer webSocketServer;
 
-    @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.user.FollowService.class)
+    @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.user.FollowService.class, timeout = 10000)
     private FollowService followService;
 
 
-    @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.qa.QAService.class)
+    @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.qa.QAService.class, timeout = 10000)
     QAService qaService;
 
-    @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.search.SearchService.class, check = false)
+    @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.search.SearchService.class, check = false, timeout = 10000)
     private SearchService searchService;
 
 

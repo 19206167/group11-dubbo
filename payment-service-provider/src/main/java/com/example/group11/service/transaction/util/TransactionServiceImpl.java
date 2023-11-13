@@ -29,19 +29,21 @@ import java.util.Optional;
  * @Date 2023/10/14 19:27
  */
 
-@DubboService(version="1.0.0", interfaceClass = com.example.group11.service.transaction.TransactionService.class)
+@DubboService(version = "1.0.0", interfaceClass = com.example.group11.service.transaction.TransactionService.class)
 
-public class TransactionServiceImpl implements TransactionService {
+public class TransactionServiceImpl extends BaseServiceImpl<TransactionModel, Transaction, Long> implements TransactionService {
     @Autowired
     UserRepository userRepository;
 
     @Autowired
     TransactionRepository transactionRepository;
 
+    @Override
     protected Class<TransactionModel> getModelType() {
         return TransactionModel.class;
     }
 
+    @Override
     protected Class<Transaction> getEntityType() {
         return Transaction.class;
     }

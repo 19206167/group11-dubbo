@@ -24,12 +24,13 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @Slf4j
 @RequestMapping("/api/comment")
+
 public class CommentController {
-    @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.qa.QAService.class)
+    @DubboReference(version = "1.0.0", interfaceClass = com.example.group11.service.qa.QAService.class, timeout = 10000)
     QAService qaService;
 
     @PostMapping("/{questionId}/{content}")
-    @ApiOperation(notes = "点赞", value = "点赞", tags = "点赞管理")
+    @ApiOperation(notes = "进行评论", value = "进行评论", tags = "评论管理")
     public RestResult<Boolean> like(@PathVariable Integer questionId, @PathVariable String content, HttpServletRequest httpServletRequest) {
 
         // 获取当前用户id
@@ -40,7 +41,7 @@ public class CommentController {
         if (qaService.comment(userId, questionId, content)){
             return RestResult.ok(true);
         } else {
-            return RestResult.fail("不能重复点赞");
+            return RestResult.fail("评论失败");
         }
     }
 
