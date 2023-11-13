@@ -3,6 +3,7 @@ import org.apache.dubbo.config.ApplicationConfig;
 import org.apache.dubbo.config.ReferenceConfig;
 import org.apache.dubbo.config.RegistryConfig;
 import org.apache.dubbo.config.annotation.DubboReference;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -15,8 +16,9 @@ import org.junit.Test;
  */
 public class UserServiceTest {
 
-    @Test
-    public void test(){
+    private static UserService userService;
+
+    private static UserService getUserService(){
         // 当前应用配置
         ApplicationConfig application = new ApplicationConfig();
         application.setName("test-user");
@@ -33,9 +35,23 @@ public class UserServiceTest {
         reference.setInterface(UserService.class);
         //接口定义的版本号
         reference.setVersion("1.0.0");
-
-        UserService userService = reference.get();
-        System.out.println(reference.get());
-        System.out.println(userService.queryUserIdByLoginName("lzj")  + "*****");
+        return reference.get();
     }
+
+    @Test
+    public void testQueryUserIdByLoginName() {
+        if (userService == null)
+            userService = getUserService();
+        Long id = userService.queryUserIdByLoginName("lzj");
+        Assert.assertEquals(8L, id.longValue());
+    }
+
+    @Test
+    public void testQueryUserByLoginName() {
+        if (userService == null)
+            userService = getUserService();
+        Assert.assertNotNull(userService.queryUserByLoginName("lzj"));
+    }
+
+//    还剩三个没测
 }
