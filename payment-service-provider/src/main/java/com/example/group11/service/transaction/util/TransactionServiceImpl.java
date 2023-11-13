@@ -1,19 +1,16 @@
 package com.example.group11.service.transaction.util;
 
+import com.example.group11.commons.utils.BaseServiceImpl;
 import com.example.group11.commons.utils.ErrorCode;
 import com.example.group11.commons.utils.Group11Exception;
 import com.example.group11.entity.sql.Transaction;
 import com.example.group11.entity.sql.User;
+import com.example.group11.model.TransactionModel;
 import com.example.group11.repository.transaction.TransactionRepository;
 import com.example.group11.repository.user.UserRepository;
-import com.example.group11.commons.utils.BaseServiceImpl;
-import com.example.group11.entity.sql.Transaction;
-import com.example.group11.model.TransactionModel;
 import com.example.group11.service.transaction.TransactionService;
-import com.example.group11.repository.transaction.TransactionRepository;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.servlet.handler.HandlerMethodMappingNamingStrategy;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
@@ -29,16 +26,16 @@ import java.util.Optional;
  * @Date 2023/10/14 19:27
  */
 
-@DubboService(version="1.0.0", interfaceClass = com.example.group11.service.transaction.TransactionService.class)
+@DubboService(version = "1.0.0", interfaceClass = com.example.group11.service.transaction.TransactionService.class)
 
-public class TransactionServiceImpl implements TransactionService {
+public class TransactionServiceImpl extends BaseServiceImpl<TransactionModel, Transaction, Long> implements TransactionService {
     @Autowired
     UserRepository userRepository;
 
     @Autowired
     TransactionRepository transactionRepository;
-  
-   @Override
+
+    @Override
     protected Class<TransactionModel> getModelType() {
         return TransactionModel.class;
     }
@@ -115,4 +112,5 @@ public class TransactionServiceImpl implements TransactionService {
         Optional<User> receiver = userRepository.findById(receiverId);
         receiver.get().setBalance(receiver.get().getBalance().add(reward));
         userRepository.save(receiver.get());
+    }
 }

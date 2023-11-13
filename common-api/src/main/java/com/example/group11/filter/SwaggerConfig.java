@@ -1,4 +1,4 @@
-package com.example.group11.config;
+package com.example.group11.filter;
 
 import io.swagger.annotations.ApiOperation;
 import org.springframework.context.annotation.Bean;
