@@ -85,10 +85,10 @@ public interface QAService extends BaseService<QuestionModel, Integer> {
     Integer getLikeNum(Integer questionId);
 
 //    评论
-    boolean comment(Long userId, Integer questionId, String content);
+    Integer comment(Long userId, Integer questionId, String content);
 
 //    删除评论
-    boolean deleteComment(Long userId, Integer questionId, Integer commentId);
+    Integer deleteComment(Long userId, Integer questionId, Integer commentId);
 
 //    获取某问题评论数
     Integer getCommentNum(Integer questionId);
