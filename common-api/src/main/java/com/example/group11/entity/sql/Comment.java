@@ -48,4 +48,6 @@ public class Comment implements BaseEntity<Integer>, Serializable {
         this.questionId = questionId;
         this.content = content;
     }
+
+    public Comment() {}
 }

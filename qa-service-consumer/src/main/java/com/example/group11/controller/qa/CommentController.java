@@ -38,7 +38,7 @@ public class CommentController {
         Long userId = JWTUtil.getUserId(token);
 
 
-        if (qaService.comment(userId, questionId, content)){
+        if (qaService.comment(userId, questionId, content) != -1){
             return RestResult.ok(true);
         } else {
             return RestResult.fail("评论失败");

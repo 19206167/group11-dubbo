@@ -247,7 +247,7 @@ public class QAServiceImpl extends BaseServiceImpl<QuestionModel, Question, Inte
     @Override
     public boolean checkUserEavesdropQuestion(Long userId, Integer questionId) {
         Optional<EavedropedQuestion> eavedrop = eavedropedQuestionRepository.findByQuestionIdAndUserId(questionId, userId);
-        log.println(eavedrop.get());
+//        log.println(eavedrop.get());
         if (!eavedrop.isPresent()) {
             return false;
         }
@@ -375,7 +375,7 @@ public class QAServiceImpl extends BaseServiceImpl<QuestionModel, Question, Inte
     }
 
     @Override
-    public boolean comment(Long userId, Integer questionId, String content) {
+    public Integer comment(Long userId, Integer questionId, String content) {
         Comment comment  = new Comment(userId, questionId, content);
         commentRepository.save(comment);
 
@@ -383,11 +383,11 @@ public class QAServiceImpl extends BaseServiceImpl<QuestionModel, Question, Inte
         question.get().setCommentNum(question.get().getCommentNum() + 1);
 
         questionRepository.save(question.get());
-        return true;
+        return comment.getId();
     }
 
     @Override
-    public boolean deleteComment(Long userId, Integer questionId, Integer commentId) {
+    public Integer deleteComment(Long userId, Integer questionId, Integer commentId) {
         return commentRepository.deleteByIdAndUserIdAndQuestionId(commentId, userId, questionId);
     }
 
