@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static jdk.nashorn.internal.runtime.regexp.joni.Config.log;
+//import static jdk.nashorn.internal.runtime.regexp.joni.Config.log;
 
 /**
  * FileName: QAService.java
@@ -247,7 +247,7 @@ public class QAServiceImpl extends BaseServiceImpl<QuestionModel, Question, Inte
     @Override
     public boolean checkUserEavesdropQuestion(Long userId, Integer questionId) {
         Optional<EavedropedQuestion> eavedrop = eavedropedQuestionRepository.findByQuestionIdAndUserId(questionId, userId);
-//        log.println(eavedrop.get());
+        //log.println(eavedrop.get());
         if (!eavedrop.isPresent()) {
             return false;
         }
