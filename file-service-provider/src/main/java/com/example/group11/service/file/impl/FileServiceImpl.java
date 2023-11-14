@@ -1,7 +1,6 @@
 package com.example.group11.service.file.impl;
 
 import com.example.group11.commons.utils.OssFileUpload;
-import com.example.group11.commons.utils.OssUtil;
 import com.example.group11.service.file.FileService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboService;

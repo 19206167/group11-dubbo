@@ -13,6 +13,7 @@ import java.util.Optional;
  * @Description ToDo
  * @Date 2023/10/14 21:28
  */
+
 public interface LikeRepository extends BaseRepository<Like, Integer> {
     boolean deleteByUserIdAndQuestionId(Long userId, Integer questionId);
 

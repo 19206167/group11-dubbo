@@ -5,6 +5,8 @@ import com.example.group11.entity.sql.Transaction;
 import com.example.group11.model.TransactionModel;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.persistence.Table;
+
 /**
  * FileName: TransactionRepository.java
  *
@@ -13,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @Description ToDo
  * @Date 2023/10/14 21:27
  */
-//
+
 public interface TransactionRepository extends BaseRepository<Transaction, Long> {
     Transaction findByIdAndDeleted(long transactionId, Boolean deleted);
 }

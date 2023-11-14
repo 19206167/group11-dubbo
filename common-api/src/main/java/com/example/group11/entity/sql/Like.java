@@ -44,5 +44,7 @@ public class Like implements BaseEntity<Integer>, Serializable {
         this.userId = userId;
         this.questionId = questionId;
     }
+
+    public Like() {}
 }
 
