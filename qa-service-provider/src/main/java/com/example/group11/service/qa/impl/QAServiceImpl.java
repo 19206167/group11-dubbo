@@ -387,7 +387,7 @@ public class QAServiceImpl extends BaseServiceImpl<QuestionModel, Question, Inte
     }
 
     @Override
-    public Integer deleteComment(Long userId, Integer questionId, Integer commentId) {
+    public boolean deleteComment(Long userId, Integer questionId, Integer commentId) {
         return commentRepository.deleteByIdAndUserIdAndQuestionId(commentId, userId, questionId);
     }
 
