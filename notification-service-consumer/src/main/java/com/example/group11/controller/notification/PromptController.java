@@ -12,10 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class PromptController {
 
     /**
-     * 通过WebSocket实现后台向前端的消息推送
-     *  project1部署在单台服务器上，因此直接由各个Controller在各自接口中通过websocket向browser推送.
-     *  project2为微服务架构，因此该Controller作为一个单体应用部署在一个专门的消息推送服务器上，其他后台服务器通过kafka向该消息推送服务器发送消息，
-     *  由该消息推送服务器通过webSocket向browser统一推送全系统的消息
+     This module has been replaced in the webSocketServer of common API package.
+     so that every service that needs to use the notification function can use @Autowired to inject WebSocketServer by introducing the common API dependency.
+     So far, only QAService(sendPrompt function) has used this notification function
      */
 
     @DubboReference(version="1.0.0", interfaceClass = com.example.group11.service.notification.NotificationService.class)

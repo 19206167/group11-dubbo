@@ -31,7 +31,7 @@ public class QAProviderTest {
         application.setOwner("owner");
 
         RegistryConfig registry1 = new RegistryConfig();
-        registry1.setAddress("zookeeper://127.0.0.1:2181");
+        registry1.setAddress("zookeeper://172.24.84.138:2181");
 
         ReferenceConfig<QAService> reference = new ReferenceConfig();
 

@@ -13,4 +13,9 @@ import org.apache.dubbo.config.annotation.DubboService;
  */
 @DubboService(version="1.0.0", interfaceClass = com.example.group11.service.notification.NotificationService.class)
 public class NotificationServiceImpl implements NotificationService {
+    /**
+     This module has been replaced in the webSocketServer of common API package.
+     so that every service that needs to use the notification function can use @Autowired to inject WebSocketServer by introducing the common API dependency.
+     So far, only QAService(sendPrompt function) has used this notification function
+     */
 }
