@@ -15,12 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 /**
- * FileName: SearchController.java
- *
- * @author 刘梓健
- * @version 1.0
- * @Description ToDo
- * @Date 2023/10/11 20:51
+ Because the leased cloud server is frequently restarted during debugging,
+ the data stored in Redis and ES will be lost because it is stored in memory.
+ When conducting testing, it is important to re run the business process to write data again.
  */
 @RestController
 @RequestMapping("/sys/search")
