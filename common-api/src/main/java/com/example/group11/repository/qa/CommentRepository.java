@@ -19,5 +19,5 @@ public interface CommentRepository extends BaseRepository<Comment, Integer> {
 
     @Modifying
     @Transactional
-    Integer deleteByIdAndUserIdAndQuestionId(Integer id, Long userId, Integer questionId);
+    boolean deleteByIdAndUserIdAndQuestionId(Integer id, Long userId, Integer questionId);
 }
