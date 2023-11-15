@@ -88,7 +88,7 @@ public interface QAService extends BaseService<QuestionModel, Integer> {
     Integer comment(Long userId, Integer questionId, String content);
 
 //    删除评论
-    Integer deleteComment(Long userId, Integer questionId, Integer commentId);
+    boolean deleteComment(Long userId, Integer questionId, Integer commentId);
 
 //    获取某问题评论数
     Integer getCommentNum(Integer questionId);
