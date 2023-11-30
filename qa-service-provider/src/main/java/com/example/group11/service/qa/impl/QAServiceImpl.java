@@ -130,7 +130,7 @@ public class QAServiceImpl extends BaseServiceImpl<QuestionModel, Question, Inte
     public Page<Question> getHottestQuestionsByPage(Integer pageNo, Integer pageSize) {
         pageNo = CheckUtil.isNotEmpty(pageNo) ? pageNo : PageEnum.DEFAULT_PAGE_NO.getKey();
         pageSize = CheckUtil.isNotEmpty(pageSize) ? pageSize : PageEnum.DEFAULT_PAGE_SIZE.getKey();
-        Sort sort = Sort.by(Sort.Direction.DESC, "likeNum", "commmentNum", "id");
+        Sort sort = Sort.by(Sort.Direction.DESC, "likeNum", "commentNum", "id");
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
 
         return questionRepository.findAll(pageable);

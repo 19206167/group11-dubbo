@@ -53,7 +53,7 @@ public class CommentController {
         String token = JWTUtil.getToken(httpServletRequest);
         Long userId = JWTUtil.getUserId(token);
 
-        if (qaService.deleteComment(userId, questionId, commentId) > 0){
+        if (qaService.deleteComment(userId, questionId, commentId) != false){
             return RestResult.ok(true);
         } else {
             return RestResult.fail("删除评论失败");
